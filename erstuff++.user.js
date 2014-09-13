@@ -1,166 +1,740 @@
 // ==UserScript==
-// @name		eRepublik Stuff++
-// @version		2.4.0
-// @require		http://code.jquery.com/jquery-2.1.0.min.js
-// @include		http*://*www.erepublik.com/*
-// @exclude		/^http(.*)://www\.erepublik\.com/(.*)/(get-gold|loyalty/program|gold-bonus)(.*)/
-// @exclude		http://www.erepublik.com/en/map
-// @grant		GM_addStyle
-// @grant		GM_xmlhttpRequest
-// @grant		GM_getResourceURL
-// @grant		GM_getResourceText
-// @grant		unsafeWindow
-// @resource	industry_1_q1	http://www.erepublik.net/images/icons/industry/1/q1.png
-// @resource	industry_1_q2	http://www.erepublik.net/images/icons/industry/1/q2.png
-// @resource	industry_1_q3	http://www.erepublik.net/images/icons/industry/1/q3.png
-// @resource	industry_1_q4	http://www.erepublik.net/images/icons/industry/1/q4.png
-// @resource	industry_1_q5	http://www.erepublik.net/images/icons/industry/1/q5.png
-// @resource	industry_1_q6	http://www.erepublik.net/images/icons/industry/1/q6.png
-// @resource	industry_1_q7	http://www.erepublik.net/images/icons/industry/1/q7.png
-// @resource	industry_1_q10	http://www.erepublik.net/images/icons/industry/1/q10.png
-// @resource	industry_1_q11	http://www.erepublik.net/images/icons/industry/1/q11.png
-// @resource	industry_2_q1	http://www.erepublik.net/images/icons/industry/2/q1.png
-// @resource	industry_2_q2	http://www.erepublik.net/images/icons/industry/2/q2.png
-// @resource	industry_2_q3	http://www.erepublik.net/images/icons/industry/2/q3.png
-// @resource	industry_2_q4	http://www.erepublik.net/images/icons/industry/2/q4.png
-// @resource	industry_2_q5	http://www.erepublik.net/images/icons/industry/2/q5.png
-// @resource	industry_2_q6	http://www.erepublik.net/images/icons/industry/2/q6.png
-// @resource	industry_2_q7	http://www.erepublik.net/images/icons/industry/2/q7.png
-// @resource	industry_3_q1	http://www.erepublik.net/images/icons/industry/3/q1.png
-// @resource	industry_3_q2	http://www.erepublik.net/images/icons/industry/3/q2.png
-// @resource	industry_3_q3	http://www.erepublik.net/images/icons/industry/3/q3.png
-// @resource	industry_3_q4	http://www.erepublik.net/images/icons/industry/3/q4.png
-// @resource	industry_3_q5	http://www.erepublik.net/images/icons/industry/3/q5.png
-// @resource	industry_000_1	http://www.erepublik.net/images/icons/industry/000/1.png
-// @resource	industry_7_default	http://www.erepublik.net/images/icons/industry/7/default.png
-// @resource	industry_12_default	http://www.erepublik.net/images/icons/industry/12/default.png
-// @resource	industry_999_21	http://www.erepublik.net/images/icons/industry/999/21.png
-// @resource	industry_999_22	http://www.erepublik.net/images/icons/industry/999/22.png
-// @resource	industry_999_29	http://www.erepublik.net/images/icons/industry/999/29.png
+// @name        eRepublik Stuff++
+// @version     2.4.25
+// @include     *www.erepublik.com/*
 // ==/UserScript==
-function setDamageKills(){var t=unsafeWindow.XMLHttpRequest.prototype.open
-unsafeWindow.XMLHttpRequest.prototype.open=function(e,i,a,o,n){this.addEventListener("readystatechange",function(){if(4==this.readyState&&(i.match(/military\/fight-shooot/)||i.match(/military\/deploy-bomb/))){var t=JSON.parse(this.responseText)
-if(!t.error&&("ENEMY_KILLED"==t.message||"OK"==t.message)){var e=0,a=0,o=0
-i.match(/military\/deploy-bomb/)?(weaponDamage=t.bomb.booster_id,e=t.bomb.damage):(e=t.user.givenDamage,a=t.user.earnedXp,1==t.oldEnemy.isNatural&&(o=1,e+=Math.floor(.1*e)),options.WeaponSelector&&(t.enemy.skill=t.enemy.skill.replace(/,/g,""),HitCalc(t.enemy),HighlightWeapon())),Kills+=1,Damage+=e,Hits+=a,setTimeout(function(){localStorage.setItem(".eRS_killsToday",Kills),localStorage.setItem(".eRS_damageToday",Damage),localStorage.setItem(".eRS_hitsToday",Hits)},0),options.noKillsDamage&&ShowKillDamage(),eRS.country==$(".country.left_side div:first h3").text()&&1==options.TPmedal&&updateTP(e)}}},!1),t.call(this,e,i,a,o,n)}}function comma(t){return(""+t).replace(/\B(?=(\d{3})+(?!\d))/g,",")}function ShowKillDamage(){$(".NoKills").remove()
-var t="padding:3px;font-size:12px;color:#666",e="color:#3c8fa7;float:right;padding-right:3px;font-size:13px;font-weight:bold"
-$("#eRS_settings").before('<div class="NoKills" style="border-bottom:1px solid #DFDFDF;box-shadow:0px 1px 0px rgba(255, 255, 255, 0.9);float:left;width:100%"><strong style="'+t+'">Kills today: </strong><br><span style="'+e+'">'+comma(Kills)+'</span><br><strong style="'+t+'">Damage today: </strong><br><span style="'+e+'">'+comma(Damage)+'</span><br><strong style="'+t+'">Hits today: </strong><br><span style="'+e+'">'+comma(Hits)+"</span></div>")}function TP(){$(".left_side a img").attr("src").split("/L/")[1].split(".")[0]==eRS.country&&$.get("http://www.erepublik.com/"+LANG+"/citizen/profile/"+eRS.citizenId,function(t){var e=t.replace(/src=/g,"tmpsrc=").replace(/\.css/g,"").replace(/\.js/g,"").replace(/url\(/g,""),i=parseFloat($(".citizen_military:eq(2) .mids",e).css("width").split("%")[0])
-currentTP=parseFloat($(".citizen_military:eq(2) strong:last",e).text().split("/")[0].replace(/,/g,"").trim()),nextTP=parseFloat($(".citizen_military:eq(2) strong:last",e).text().split("/")[1].replace(/,/g,"").trim()),doneTP=(nextTP-currentTP)/(100-i)*i,startTP=currentTP-doneTP,$("#total_damage").attr("style","bottom:40px!important;"),$("#player_rank").attr("style","bottom:140px!important;"),$("#player_rank").after('<div id="player_rank" style="bottom:96px"><div class="rank_icon" original-title="TP Medal"><img alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAA6lBMVEUAAADk4dLu6c3Fv6bOybTV0cHQzLa7tqLZ18kXFgrv69e9t5zEv6mlnHi9tpqpn3TGvIft58rd17eDe2OMhWdnXjvZ0J67sH7s5cDdz479+OHIr0KAdD6Nfjvz67zHsEv48ciahzikl12RiF24qWPHuXrOu2jTx47BsGTey3fm039PRBdTSSWdj0qvn1THvIzaxFru35bQwXtya0uon3Pu5bF9bSPr6NLbzoy6pESrpY3FvZubkmlcThP57aPp0mn999ne161kWB+wmz/n4LtwZTbYz57Qyann145iWTGGfVb8+eg8Mwq4sIAJoGshAAAAHHRSTlMAC0g3FSpUBCABNWtDkINknFZsjjoljXV2yI6IGCSKSQAAAglJREFUOMutk+e6ojAQhhHBBOwe29kNvVdBBcHe+7n/21nWs4oL+3MnP5In35vMTGaC/W9ravRzCUgS5PTCD6X23IVlksoBpZmIOn/0bhXkPdSu6PIAKNhAFSxvlaP0AR6+GoL9AiB8AcXx3W4nM/Epy3b9uduatr8XdEMejCx7BEF3qM2sj9exwbxKAIxqmvKAXakMc6kiOZhbvTS56lgqg6KpDm6srwguuiMtYBg8jY04mqfap+mc1vzEDQ/yRYyCcEi/dNA0plNxOURH9jbjYsvdSoHGRJUUKOL1kazq4tBnZc6zGHvKu+Nh5a83VkLBMTcznYtXobiVeEdTi+8AUZYc5HqDgRp7Es84Z8l3v4EUqX05u9Vyw3GnpTCMxz4Ds4WSBM6LFXEcCdOzM1uhHPClGd4OXVEoQUPYc4csAPcTk3ORuLVJytB57kBmAHzCrnb3uR+OClhLW+vbetbFyfe4xYjd2WRy21pfVDNZKBrvCeX5xF/gGJzw+kLJ6Gp/bTBkY7+5kL8B1RIhleqFrlEp8boIyWhz6GDknje2qPSmt9QehQexSGPdKMkPbtgzs1BeBFWKegCjeZWhscYyacuCxp71WpNOy1kGSZ43Q2gDeT23AGixxzJBpTFQgEoAlkNkQVleRwAjSkT+18BgNyawvikknf9vw3/WOwDv19v5w6mvx3i3X7WuRBV1yWtgAAAAAElFTkSuQmCC" style="width:32px;height:32px"></div><div class="rank_holder"><b id="gained_rank2">&nbsp;</b><strong id="rank_max2" original-title="Next TP Medal at:&nbsp;'+comma(nextTP)+'"><span id="rank_min2">'+comma(currentTP)+' TP points</span> </strong><div style="width:'+i+'%" class="rank_bar" id="rank_status_gained2"></div><div style="width:0%" class="rank_bar gained" id="rank_status2"></div></div>'),$j("#rank_max2").tipsy(cloneInto({gravity:"s"},unsafeWindow))})}function updateTP(t){currentTP+=t,doneTP+=t,currentTP>=nextTP&&(nextTP+=1e8,startTP+=1e8,doneTP-=1e8)
-var e=doneTP/(nextTP-startTP)*100
-$("#gained_rank2").text("+"+comma(t)),$("#gained_rank2").css("display","block"),$("#rank_status_gained2").css({width:e+"%"}),$("#rank_min2").text(comma(currentTP)+" TP Points")}function NaturalEnemy(){var t="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAYFBMVEUAAAAAAAAAAAC4AAAAAAAAAAAAAAAEAAAAAAAAAAAiAACYAABSAACQAAC6AADJAADQFxf////79/jDAAD56+y+AAD78PHVMjPODQ3SJyjur7HQICDxwMLolZbwubnrpKa66gNgAAAAD3RSTlMVEBnvHgIGMQwmO5JQiPeWuYyFAAAAhklEQVQY02VPSQ6DMAycBAdjNhPCUqDL/39Zq2oOKD5YmpFmQwh14+CJPFxThwDDIGE7IRgDw8JDlVLVtWIMDPej6jSprr0YdMSjHueyvXddW3KADHoscZ7jtmsngOdKz/i5rld86soexOmxzObw+0x3IhmRJdNfUpjm2C3HFsWK6sW4Yv4XCT4LXK2gv4wAAAAASUVORK5CYII=";($('.side_flags[src*="/M/'+eRS.country+'.png"]').length=0||1==unsafeWindow.SERVER_DATA.isResistance)||$.get("http://www.erepublik.com/"+LANG+"/country/military/"+eRS.country,function(e){var i=e.replace(/src=/g,"tmpsrc=").replace(/\.css/g,"").replace(/\.js/g,"").replace(/url\(/g,"")
-if($(".indent:eq(0) .attacker img",i).length>0){var a=$(".indent:eq(0) .flagholder img",i).attr("tmpsrc").split("/L/")[1].split(".")[0]
-$("#battle_listing li").each(function(){0==$(".resistance_sign",this).length&&$('.side_flags[src*="/M/'+eRS.country+'.png"]',this).length>0&&$('.side_flags[src*="/M/'+a+'.png"]',this).after('<img alt="" title="Natural enemy" src="'+t+'" style="margin:8px -20px 0 -10px;z-index:5">')}),$('.country a img[src*="/L/'+a+'.png"]').after('<img alt="" title="Natural enemy" src="'+t+'" style="position:absolute;margin:-2px 0 0 -10px">')}})}function MaxRecoverEnergy(){$("#maxRecover").remove(),$("#current_health").after('<strong id="maxRecover" style="text-align:right;margin-right:5px">'+unsafeWindow.food_remaining+"</strong>"),setTimeout(MaxRecoverEnergy,1e3)}function StorageInventory(){$.get("http://www.erepublik.com/"+LANG+"/economy/inventory",function(t){var e=t.replace(/src=/g,"tmpsrc=").replace(/\.css/g,"").replace(/\.js/g,"").replace(/url\(/g,"")
-if(options.showStorageInv){GM_addStyle("#sideInventory{position:absolute;background:#FFF}#sideInventory img,#sideInventory span{float:left;clear:both}#sideInventory img{width:39px;height:39px;background:linear-gradient(#EEF1EC 0px, #D5DECF 100%)}#sideInventory span{font-size:10px;font-weight:bold;color:#578B4D;background:linear-gradient(#BEE698 0px,#98D780 100%);width:39px;text-align:center;cursor:default}.col{line-height:19px}")
-var i=""
-$(".item_mask ul li,.bazooka .item",e).each(function(){if(0!=$("strong",this).text()){var t=void 0==$("strong",this).attr("id")?"":$("strong",this).attr("id").split("stock_")[1],a=void 0==$("#product_details_"+t,e).html()?"":$("#product_details_"+t+" .attributes",e).html()
-$("#product_details_"+t+" .extra",e).length>0&&(a+=$("#product_details_"+t+" .extra",e).html()),"bazooka"==$(this).parent().attr("class")&&$(".b_parts li",e).each(function(){a+=$(this).attr("title")+': <span class="col defense">'+$("strong",this).text()+"</span></br>"})
-var o=$("img",this).attr("tmpsrc").split("/icons/")[1].split(".png")[0].replace(/\//g,"_")
-try{{GM_getResourceText(o)}o=GM_getResourceURL(o)}catch(n){n&&(o=$("img",this).attr("tmpsrc"))}i+='<img original-title="'+a.replace(/"/g,"'")+'" src="'+o+'"/><span>'+$("strong",this).text()+"</span>"}}),$("body").prepend('<div id="sideInventory">'+i+"</div>"),$j("#sideInventory img").tipsy(cloneInto({gravity:"w",html:!0},unsafeWindow))}if(options.storageCapacity){var a=$(".area.storage h4:first strong",e).text().replace(/[,()]/g,"").split("/")
-$(".currency_amount").after('<div style="clear:both;float:left;height:22px;margin:-1px 0 10px 6px;width:142px;color:#585858;font-size:12px"><p><img style="float:left;margin:0 6px 0 2px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAyVBMVEUAAAAyMzfS1t4uLzQwMjYoKSktLS1lZ2ubqcYtLS0rKytAR1Y/RVJKUmfFzNgsLCwyMjJBQUEyMjLd4Obc3+QoKjC/x9U6OjuFipRjZmpLUmbCydizvdCNkZyir8gsLCwqKipSW3GZqccvLzH19fVDSVheZ352gpxYYHelscjm6OuvvNNocInu7++drMm4wtfg4eXy8vJPV2tnb4TFztxRU1ZCTmdLVGo1Q12XpsQzMzNcXmRkZ21ucXgmNVKhq77CysGYnqq/yNh4k25rAAAAH3RSTlMAWw90TQlTAYYYKMzfpD/oY9+RQ49CfIiCNeiU2Z3XxuSTsAAAALBJREFUGNNtz0cWgjAARdFYERDsvZAECKH3Ztf9L8qAh+OEP3t39kHLuP5s3hEG/x6qinpRJ1O+aaVZj+cYdCCsCyowTTcCB/a6+iN4Nb3n+wQkihixvpkY4/IMJJQTwuhu4hJjbwTG0SNDMYlN7L2SxK8AoaJwDM9OXE1joOeI0swxbEvTaujpESVxBWEYup8jAHxfRKQC17WCgwzYBiuRGn4QLBddrvmz265lVm37Aq4DGPv4ctamAAAAAElFTkSuQmCC" /><strong>'+comma(a[0])+"/"+comma(a[1])+"</strong><br><span>Free: "+comma(a[1]-a[0])+"</span></p></div>")}})}function AutoBot(){function t(){return 0!=a?0>=i&&!$("#allin").is(":checked")?$("#AutoBotSwitch").click():void $.post("/en/military/fight-shooot/"+unsafeWindow.SERVER_DATA.battleId,{sideId:unsafeWindow.SERVER_DATA.countryId,battleId:unsafeWindow.SERVER_DATA.battleId,_token:unsafeWindow.SERVER_DATA.csrfToken},function(a){if(a.error){if(a.display_captcha)return void unsafeWindow.ERPK.displayCaptcha()
-if("disarmed"==a.message)return void unsafeWindow.battleFX.enableDisarm()
-if("UNKNOWN_SIDE"==a.message)return void(document.location=a.url)
-if("WRONG_SIDE"==a.message)return void(document.location=a.url)
-if("SHOOT_LOCKOUT"==a.message)return t()}$("#allin").is(":checked")||(i--,$("#kills").val(i)),$("#experienceTooltip strong").eq(1).text(parseInt($("#experienceTooltip strong").eq(1).text())+a.user.earnedXp),1==a.oldEnemy.isNatural&&(a.user.givenDamage+=Math.floor(.1*a.user.givenDamage)),$("#total_damage strong").text(comma(Math.floor(parseInt($("#total_damage strong").text().replace(/,/g,""))+a.user.givenDamage))),$("#rank_min span").text(comma(a.rank.points)),$("#rank_status_gained").css("width",a.rank.percentage+"%"),$("#player_life").css("width",a.details.current_energy_ratio+"%"),$("#possible_life").css("width",a.details.remaining_energy_ratio+"%"),$("#weapon_inventory p").text(a.user.weaponQuantity),$("#enemy_name").text(a.enemy.name),$("#enemy_skill").text(a.enemy.skill),$("#enemy_life").css("width",a.enemy.energyRatio+"%"),$("#side_bar_currency_account_value").text(comma(a.details.currency)),$("#side_bar_gold_account_value").text(a.details.gold),Kills+=1,Damage+=a.user.givenDamage,Hits+=a.hits,setTimeout(function(){localStorage.setItem(".eRS_killsToday",Kills),localStorage.setItem(".eRS_damageToday",Damage),localStorage.setItem(".eRS_hitsToday",Hits)},0),options.noKillsDamage&&ShowKillDamage(),eRS.country==$(".country.left_side div:first h3").text()&&1==options.TPmedal&&updateTP(a.user.givenDamage),e(a.details.wellness),unsafeWindow.energy.processResponse(cloneInto(a.user,unsafeWindow)),unsafeWindow.smallestFood={use:2}}):void 0}function e(e){if(!$("#eatEB").is(":checked")&&0==unsafeWindow.food_remaining||e>=100)return setTimeout(t,o)
-var i=$("#eatEB").is(":checked")?"buttonColor=orange":"buttonColor=blue"
-setTimeout(function(){$.getJSON("http://www.erepublik.com/"+LANG+"/main/eat?format=json&_token="+unsafeWindow.SERVER_DATA.csrfToken+"&"+i+"&jsoncallback=?",{},function(e){t(),unsafeWindow.energy.processResponse(cloneInto(e,unsafeWindow))})},o)}$(".weapon_attributes").remove(),GM_addStyle("#AutoBot{background:#242B27;position:absolute;top:472px;left:772px;color:white;font-size:12px;font-weight:bold;line-height:20px;text-align:center}#AutoBot input{margin:3px}#AutoBotSwitch{cursor:pointer;width:100%;background:#FB7E3D}#AutoBotSwitch:hover{background:#83B70B!important}"),$("#enemy_defeated").after('<div id="AutoBot"><div style="padding:5px">Kills:<input id="kills" type="text" size="1" value="25" style="text-align:center"><label><input id="allin" type="checkbox">All-in</label></br><label><input id="eatEB" type="checkbox">Eat energy bars</label></div><div id="AutoBotSwitch">AUTOBOT OFF</div></div>')
-var i,a=!1,o=6365664==eRS.citizenId?600:1e3
-$("#AutoBotSwitch").click(function(){"AUTOBOT OFF"==$("#AutoBotSwitch").text()?($("#AutoBotSwitch").text("AUTOBOT ON"),$("#AutoBotSwitch").css("background","#83B70B"),a=!0,i=$("#kills").val(),t()):($("#AutoBotSwitch").text("AUTOBOT OFF"),$("#AutoBotSwitch").css("background","#FB7E3D"),a=!1)}),$("#allin").change(function(){$(this).is(":checked")?$("#kills").prop("disabled",!0):$("#kills").prop("disabled",!1)})}function QuickMarket(){GM_addStyle(".eRS_quickMarket{display:none!important;border-top:1px solid #ccc;position:absolute!important;top:0px!important}.eRS_quickMarket li img{width:18px;height:20px;vertical-align:middle;margin-bottom:2px}")
-var t,e,i="",a="",o=""
-for(t=1;3>=t;t++)for(e=1;7>=e;e++)1==t&&7>=e&&(i+='<li><a href="http://www.erepublik.com/'+LANG+"/economy/market/"+img_country[eRS.country].id+"/1/"+e+'/citizen/0/price_asc/1"><img src="'+GM_getResourceURL("industry_"+t+"_q"+e)+'"> Food Q'+e+"</li>",7==e&&(i+='<li><a href="http://www.erepublik.com/'+LANG+"/economy/market/"+img_country[eRS.country].id+'/7/1/citizen/0/price_asc/1"><img src="'+GM_getResourceURL("industry_7_default")+'"> Food Raw</li>')),2==t&&7>=e&&(a+='<li><a href="http://www.erepublik.com/'+LANG+"/economy/market/"+img_country[eRS.country].id+"/2/"+e+'/citizen/0/price_asc/1"><img src="'+GM_getResourceURL("industry_"+t+"_q"+e)+'"> Weapon Q'+e+"</li>",7==e&&(a+='<li><a href="http://www.erepublik.com/'+LANG+"/economy/market/"+img_country[eRS.country].id+'/12/1/citizen/0/price_asc/1"><img src="'+GM_getResourceURL("industry_12_default")+'"> Weapon Raw</li>')),3==t&&5>=e&&(o+='<li><a href="http://www.erepublik.com/'+LANG+"/economy/market/"+img_country[eRS.country].id+"/3/"+e+'/citizen/0/price_asc/1"><img src="'+GM_getResourceURL("industry_"+t+"_q"+e)+'"> Ticket Q'+e+"</li>")
-$("#menu4 ul li:first").append('<ul class="eRS_quickMarket">'+i+'</ul><ul class="eRS_quickMarket">'+a+'</ul><ul class="eRS_quickMarket">'+o+"</ul>"),$("#menu4 ul li:first").hover(function(){$(".eRS_quickMarket:eq(0)").attr("style","display:block!important"),$(".eRS_quickMarket:eq(1)").attr("style","display:block!important;left:269px!important;"),$(".eRS_quickMarket:eq(2)").attr("style","display:block!important;left:407px!important;")},function(){$(".eRS_quickMarket").hide()})}function ChangeSalaryAll(){function t(){$("#change_sal_all").length>0?$("#change_sal_all").remove():(GM_addStyle(".thoughtbot{cursor:pointer;margin:2px;background-image:linear-gradient(#ee432e 0%, #c63929 50%, #b51700 50%, #891100 100%);border:1px solid #951100;border-radius:5px;color:#fff;font:bold 11px arial;text-shadow:0px -1px 1px rgba(0, 0, 0, 0.8);width:100px;height:30px}.thoughtbot:hover{opacity:0.7}"),$(".bottom_details").before('<div id="change_sal_all" style="float:right"><input type="text" style="margin5px;width:40px;text-align:right" class="field" id="eRS_same_all"><button class="thoughtbot" id="changeAll">Change For All</button></div>'),$("#changeAll").click(function(){i=[],a=0,$(".list_group .employee_salary.c3").each(function(){var t=$(".old_salary_value",this).attr("id").split("_")[2]
-if(""==$("#eRS_same_all").val())var e=$("#salary_value_"+t,this).val()
-else var e=$("#eRS_same_all").val()
-0!=parseFloat(e)&&parseFloat(e)!=parseFloat($("#old_salary_"+t,this).val())&&i.push({action_type:"update_salary",employeeId:t,salary:e,_token:$("#_token").val()})}),a=i.length,e(0)}))}function e(t){t>=a||$.post("http://www.erepublik.com/"+LANG+"/economy/update-salary",i[t],function(a){var o=$("#old_salary_"+i[t].employeeId).parent().parent()
-0==a.status&&"redirect"==a.message||0==a.status&&"lock"==a.message||(1==a.status?($("#old_salary_"+i[t].employeeId).val(a.result.salary),$("#salary_value_"+i[t].employeeId).val(a.result.salary),$("#current_salary_"+i[t].employeeId).html(a.result.salary+" "+unsafeWindow.salaryDetails.currency),$(o).append('<div class="notice_holder"><strong>'+a.result.message+'</strong><a href="javascript:;"></a></div>'),setTimeout(function(){$(".notice_holder",o).remove()},4e3),setTimeout(unsafeWindow.recalculateDues,50)):($(o).append('<div class="error_holder"><strong>'+a.message+'</strong><a href="javascript:;"></a></div>'),$(o).bind("click",function(){$(".error_holder",o).remove()}))),setTimeout(function(){e(t+1)},3e3)},"json")}var i=[],a=0
-$("#edit_mode").click(function(){t()}),$("#add_mode,#remove_mode").bind("click",function(){$("#change_sal_all").length>0&&$("#change_sal_all").remove()})}function SortWages(){$("#edit_mode").after('<span id="SortButton" class="blue_plastic"><span style="line-height:30px">Sort</span></span>'),$("#SortButton").click(function(){var t=[]
-$(".current_salary").each(function(){t.push({wage:$(this).text().split(" ")[0],row:$(this).parent().parent()})}),"Sort"==$("#SortButton span").text()||"DESC"==$("#SortButton span").text()?($("#SortButton span").text("ASC"),t.sort(function(t,e){return t.wage-e.wage})):($("#SortButton span").text("DESC"),t.sort(function(t,e){return e.wage-t.wage}))
-for(var e=0;e<t.length;e++)$(".list_group").append(t[e].row)})}function ShowProfitability(){var t=parseInt(window.location.href.split("/")[7])
-if(1==t||2==t){var e,i,a=parseInt(window.location.href.split("/")[8])
-1==t&&(i="hp",e=7!=a?2*a:20),2==t&&(i="use",e=7!=a?a:10),$("#marketplace thead .m_provider").after('<th style="width:110px">Cost Per Use</th>'),$("#marketplace .price_sorted tr").each(function(){var t=$(".m_buy a",this).attr("data-price")/e
-t=t.toFixed(.1>=t?4:2),$(".m_provider",this).after('<td class="stprice"><strong>'+t.split(".")[0]+"</strong><sup>."+t.split(".")[1]+"<strong> "+$(".currency_amount p img").attr("title")+"/"+i+"</strong></sup></td>")})}}function GetItemPrice(){$(".sell_selector .industry_quality_selector").click(function(){var t=$(this).attr("quality")
-"0"==t&&(t=1)
-var e=$(this).attr("industry"),i=void 0===unsafeWindow.itemPartials[e]?0:unsafeWindow.itemPartials[e][t],a=0==i?unsafeWindow.itemAmounts[e][t]:unsafeWindow.itemAmounts[e][t]-1
-a>99999&&(a=99999),$("#sell_amount").val(a)
-var o=$("img",this).attr("src").split("/industry/")[1],n=0
-$('tr[id^="offer_"]:visible .offer_image').each(function(){$(this).attr("src").split("/industry/")[1]==o&&(n=$(this).parent().parent().find(".offer_price strong").text(),setTimeout(function(){$("#sell_price").val(n)},0))}),0==n&&(setTimeout(function(){$("#sell_price").val(0)},0),GM_xmlhttpRequest({method:"GET",url:"http://m.erepublik.com/"+LANG+"/economy/market/"+img_country[eRS.country].id+"/"+e+"/"+t+"/citizen/0/price_asc/1",onload:function(t){$("#sell_price").val(t.responseText.split('<div class="c1">')[2].split("<strong>")[1].split(" ")[0])}}))})}function DoQuickAccess(){GM_addStyle('#large_sidebar .user_info .user_notify .notify.mudo{left:66px;background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAA8CAMAAABRqGpkAAAAbFBMVEUAAADc3Nx7e3zc3Nzc3NzZ2dkSEhYSEhbc3Nzc3NwSEhba2toSEhaUlJSVlZWUlJSUlJTc3NyVlZWXl5eUlJSTk5OQkJDc3NyXl5eXl5cSEhbKysqRkpKXl5eOjo4SEhZmZmjU1NSXl5eLjIzD8EThAAAAInRSTlMAXgMTDi1zJmIxDHEcMXAjRUKREwuCuyLQmzqHWvfoX3WBcglxuwAAAW9JREFUOMuVkdmagyAMRiPLyOa+dWpX5/3fcSLUBqw3/VUuzpcI5ACT1qoMo1SmcLVWMjBP1WgppfaRulFPA842Exdie/nUWAe50pzBO4xrlXsIUJRle+kYUqEzhJkUCE/LsrR1UQGXoRJhNyw+v69KJbGd1dcNSrVBqEYPS6wM7QxhX56G3+upwMqwEayp26qqix64h8pDVrV112MP19m2e3UZbmNbFn04fID1+Ie5lR0L/0yvCaFyHQjnwhPB14EgnP3o/PTWp8nmHNxjxiHjg1lXOz8cmPP9J8n9bIAZlydxhgVHKMd7Sh1pvw0mdhTCY0fwcfhMi0OYiJNvmyROvOYZi6N2Ekc2xU5cgKm4rZ3EIaRKEhc2kjwSB+JAHDkSdFGWOMJvAphSR0HTt44O4XG7OzuI40FuYBeD54SPfA/JJkGySTC2SZBsEoxsEiSblsUQhnG1WQBBskkwtkmQbAbo4CPoiO0ZQ0d7iuAf9bIoK/girsYAAAAASUVORK5CYII=");background-repeat:no-repeat;background-position:0 0}#large_sidebar .user_info .user_notify .notify.mudo:hover{background-position:0 -20px}#large_sidebar .user_info .user_notify .notify.mudo:active{background-position:0 -40px}#large_sidebar .user_info .user_notify .notify.nalert{left:22px}#large_sidebar .user_info .user_notify .notify.newleaderboard{left:44px}'),$(".user_notify:first").append('<a href="http://www.erepublik.com/'+LANG+'/main/group-home/military" title="Change MUDO" class="notify mudo"></a>')}function getGuerrillaDmg(){$("#back_to_battle").click(function(){Damage+=parseInt($(".award_damage strong").text().split("+")[1]),setTimeout(function(){localStorage.setItem(".eRS_damageToday",Damage)},0),options.noKillsDamage&&ShowKillDamage()})}function ExchangeMarketButtons(){function t(){$("button[data-currency=GOLD]").each(function(){var t=$(this).attr("data-max")>10?"10.00":$(this).attr("data-max"),e=$(this).attr("data-price"),i=$("#eCash").val()
-t*e>i&&(t=Math.floor(100*i/e)/100),$(this).parent().find("input").val(t),$(this).text($(this).attr("data-i18n")+" "+comma(Math.ceil(t*e*100)/100)+" "+unsafeWindow.erepublik.citizen.currency)})}var e
-setInterval(function(){$("button[data-currency=GOLD]").eq(0).attr("id")!=e&&(e=$("button[data-currency=GOLD]").eq(0).attr("id"),t())},100),t()}function ImproveInventory(){function t(){$("#Net_unit,#Total_net").remove(),$(".offers_price").after('<th id="Net_unit"><strong>Net/unit</strong><b></b></th><th id="Total_net"><strong>Total Net Value</strong><b></b><span style="float:left;height:14px;clear:both;padding:8px 0px 8px 5px;color:#88AFC9;font-size:11px;font-weight:bold"></span></th>')
-var t=$("#sell_product").attr("src").split("/industry/")[1].split("/")[0],e=img_country[$("#market_select img").attr("src").split("/M/")[1].split(".")[0]].id,i=+$("#sell_amount").val()||0,a=+$("#sell_price").val()||0,r=unsafeWindow.countryList[e].taxes[t],s=+r.value_added_tax
-e!=unsafeWindow.citizenshipCountry&&(s+=+r.import_tax)
-var l=a/((100+s)/100),c=l*i
-$("#Net_unit b").text(l.toFixed(2)+" "+o),$("#Total_net b").text(c.toFixed(2)+" "+o),$("#Total_net span").text((c/n).toFixed(2)+" GOLD")}function e(){$('tr[id^="offer_"]:visible').each(function(){$(".fluid_blue_dark_small,.Net_unit,.Total_net",this).remove()
-var t=img_country[$(".offer_flag",this).attr("src").split("/M/")[1].split(".")[0]].id,e=$(".offer_image",this).attr("src").split("/industry/")[1].split("/"),i=-1!=e[1].split("_")[0].indexOf("q")?e[1].split("_")[0].replace("q",""):1,a=$(".offer_amount",this).text().replace(/,/g,""),r=$(".offer_price strong",this).text(),s=unsafeWindow.countryList[t].taxes[e[0]],l=+s.value_added_tax
-t!=unsafeWindow.citizenshipCountry&&(l+=+s.import_tax)
-var c=r/((100+l)/100),d=c*a,p=d/n
-$(".offer_price",this).after('<td class="Net_unit"><strong>'+c.toFixed(2)+"</strong> "+o+'</td><td class="Total_net"><strong>'+d.toFixed(2)+"</strong> "+o+'<br><strong style="text-align:right;font-size:11px">'+p.toFixed(2)+'</strong><span style="font-size:11px"> GOLD</span></td>'),$(".delete_offer",this).after('<a title="Show offer on market" href="http://www.erepublik.com/'+LANG+"/economy/market/"+t+"/"+e[0]+"/"+i+"?customOffer=true&sellerId="+eRS.citizenId+"&sellerName="+$(".user_identity").text()+"&offerId="+$(this).attr("id").split("_")[1]+"&offerAmount="+$(".offer_amount",this).text().replace(/,/g,"")+"&offerPrice="+$(".offer_price strong",this).text().replace(/,/g,"")+'" target="_blank" class="fluid_blue_dark_small" style="float:right;margin:0 2px 0 7px"><span>O</span></a><a title="Visit market" target="_blank" class="fluid_blue_dark_small" style="float:right" href="http://www.erepublik.com/'+LANG+"/economy/market/"+t+"/"+e[0]+"/"+i+'/citizen/0/price_asc/1"><span>M</span></a>')})}function i(){$("tfoot strong").text(0)
-var t=0
-$(".Total_net:visible").each(function(){t+=+$("strong:eq(0)",this).text()}),$("tfoot strong:eq(0)").text(t.toFixed(2)),$("tfoot strong:eq(1)").text((t/n).toFixed(2))}GM_addStyle("td:last-child,#Net_unit,.Net_unit,#Total_net,.Total_net{padding-left:0!important}.Total_net{padding:15px;text-align:right}.delete_offer{opacity:1!important}")
-var a=$(".area.storage h4:first strong").text().replace(/[,()]/g,"").split("/")
-$(".area.storage h4:first strong").append(" Free space: "+comma(a[1]-a[0])),$("th input").css("width","50px"),$(".offers_product").css("width","70px"),$(".offers_price").css("width","120px"),$(".offers_quantity").css("width","80px"),$(".offers_market").css("width","60px"),$(".offers_action").css("width","132px"),$(".offers_action a").css("cssText","left:10px;margin-right:20px")
-var o=unsafeWindow.erepublik.citizen.currency
-$("#sell_offers table").append('<tfoot><tr style="background:#F7FCFF;height:44px"><td colspan="4"><td class="Total_net"><strong></strong> '+o+'<br><strong style="font-size:11px"></strong><font style="font-size:11px"> GOLD</font></td><td colspan="2"></td></tr></tfoot>')
-var n
-$.get("http://www.erepublik.com/"+LANG+"/economy/exchange-market/",function(i){n=i.split("data-price='")[1].split("'")[0],t(),e()}),setInterval(function(){i(),t()},100)
-var r=unsafeWindow.XMLHttpRequest.prototype.open
-unsafeWindow.XMLHttpRequest.prototype.open=function(i,a,o,n,s){this.addEventListener("readystatechange",function(){4==this.readyState&&(a.indexOf("/economy/postMarketOffer")>0||a.indexOf("/economy/deleteMarketOffer")>0)&&setTimeout(function(){t(),e()},0)},!1),r.call(this,i,a,o,n,s)}}function PreventScroll(){$(window).bind("scroll",function(){$("#large_sidebar").hasClass("fixed")&&($("#large_sidebar").removeClass("fixed"),$("#large_sidebar").attr("style",""),$("#large_sidebar").next().hide())})}function DrawLogo(){GM_addStyle("#eRS_settings{margin:2px 0 -5px 0;width:148px;box-shadow:inset 0px 1px 0px 0px #fff;background:linear-gradient(#ededed,#dfdfdf);border-radius:6px;border:1px solid #dcdcdc;display:inline-block;cursor:pointer;color:#777;font-family:Arial;font-size:11px;font-weight:bold;text-align:center;padding:6px 0px;text-shadow:0px 1px 0px #fff}#eRS_settings:hover{background:linear-gradient(#dfdfdf,#ededed)}#eRS_settings:active{position:relative;top:1px}#close_popup{position:absolute;top:-10px;right:-10px;cursor:pointer;float:right;background:black;border:2px solid white;border-radius:35px;box-shadow:-2px 2px 5px black;color:white;font-size:20px;font-weight:bold;height:23px;line-height:20px;width:23px}.setTitle{text-align:center;font-weight:bold;color:#FFF}#options_popup table{width:100%;text-align:left}#options_popup table td{padding:2px;vertical-align:top}#options_popup table td input{vertical-align:top;float:right;margin-right:10px}.donateT a{color:white;background:black;border:5px solid black;border-radius:10px;margin:0 120px}.donateT a:hover{text-decoration:underline}"),$("body").append('<div id="eRS_blockUI"></div><div id="options_popup" style="display:none;background:#23b14d;border-radius:20px;box-shadow:0px 0px 10px 2px rgba(0,0,0,0.6);padding:15px;cursor:default"><strong id="close_popup">x</strong><div class="donateT" style="margin:0 0 10px 0;font-size:13px;font-weight:bold"><a href="http://goo.gl/Yhnb3M" target="_blank">Script Homepage</a><a href="http://www.erepublik.com/en/citizen/profile/6365664" target="_blank">Donate / Contact</a></div><table><tbody><tr><td><table><tr><td class="setTitle">Battlefield settings</td></tr><tr><td>Improve battlefield<input type="checkbox" id="improveBattlefield" /></td></tr><tr><td>Display weapon menu + hits needed to kill<input type="checkbox" id="WeaponSelector" /></td></tr><tr><td>Enable AutoBot<input type="checkbox" id="autoBot" /></td></tr><tr><td>Show TP damage<input type="checkbox" id="TPmedal" /></td></tr><tr><td>Automatically close wrong side warning<input type="checkbox" id="WrongSideNotice" /></td></tr><tr><td class="setTitle">Campaign settings</td></tr><tr><td>Mark natural enemy<input type="checkbox" id="showNE" /></td></tr><tr><td>Show dom. points and wall percentages<input type="checkbox" id="campaignPoints" /></td></tr><tr><td>Show mercenary points<input type="checkbox" id="mercenaryPoints" /></td></tr><tr><td>Add direct links for each side in RWs<input type="checkbox" id="CampaignRWQuickLinks" /></td></tr></table></td><td><table><tr><td class="setTitle">Common settings</td></tr><tr><td>Automatic energy recovery<input type="checkbox" id="autoEnergyRecover" /></td></tr><tr><td>Stop recovery to maximize level-up refill<input type="checkbox" id="LvlupNoRecovery" /></td></tr><tr><td>Display XP needed to level-up<input type="checkbox" id="XPLeft" /></td></tr><tr><td>Prevent sidebar scroll<input type="checkbox" id="preventSidebarScroll" /></td></tr><tr><td>Show max energy recover<input type="checkbox" id="maxEnergy" /></td></tr><tr><td>Kills, damage and hits on sidebar<input type="checkbox" id="noKillsDamage" /></td></tr><tr><td>Remove external link warning <input type="checkbox" id="removeExternalLinkWarn" /></td></tr><tr><td>Quick access to MUDO change<input type="checkbox" id="doQuickAccess" /></td></tr><tr><td class="setTitle">Company settings</td></tr><tr><td>Company manager<input type="checkbox" id="companyManager" /></td></tr><tr><td>Change salary for all<input type="checkbox" id="changeSalaryAll" /></td></tr><tr><td>Sort employees by salary<input type="checkbox" id="sortWages" /></td></tr><tr><td>Add employees link to My places<input type="checkbox" id="AddManageEmployeesLink" /></td></tr></table></td><td><table><tr><td class="setTitle">Inventory settings</td></tr><tr><td>Improve inventory<input type="checkbox" id="improveInventory" /></td></tr><tr><td>Display storage inventory<input type="checkbox" id="showStorageInv" /></td></tr><tr><td>Display storage info<input type="checkbox" id="storageCapacity" /></td></tr><tr><td>Autofill amount and real price<input type="checkbox" id="getItemPrice" /></td></tr><tr><td class="setTitle">Marketplace settings</td></tr><tr><td>Autofill maximum product amount<input type="checkbox" id="MarketplaceAutofill" /></td></tr><tr><td>Product quick links<input type="checkbox" id="quickMarket" /></td></tr><tr><td>Display cost per use<input type="checkbox" id="showProfitability" /></td></tr><tr><td class="setTitle">Monetary market settings</td></tr><tr><td>Autofill maximum gold amount<input type="checkbox" id="improveExchangeMarket" /></td></tr><tr><td class="setTitle">Profile settings</td></tr><tr><td>Improve profile page<input type="checkbox" id="improveProfilePage" /></td></tr><tr><td>Influence calculator<input type="checkbox" id="InfluenceCalculator" /></td></tr></table></td></tr></tbody><table></table></div>')
-for(var t in options)$("input#"+t+"[type=checkbox]").length>0&&$("#"+t).prop("checked",options[t])
-$("#options_popup input").change(function(){options[$(this).attr("id")]=$(this).prop("checked"),localStorage.setItem(".eRS_options",JSON.stringify(options))}),$(".user_finances").after('<div id="eRS_settings" original-title="Click to open settings">eRepublik Stuff++ '+GM_info.script.version+"</div>"),$j("#eRS_settings").tipsy(cloneInto({gravity:"e"},unsafeWindow)),$("#eRS_settings").click(function(){var t=$("#options_popup").height(),e=$(window).height(),i=e>t?Math.round((e-t)/2)+"px":"50px"
-$("#eRS_blockUI").css({display:"block",position:"absolute",top:"0px",left:"0px",width:"100%",height:$(document).height(),"background-color":"black","z-index":"999998",opacity:"0.5",cursor:"not-allowed"}),$("#options_popup").css({display:"block",position:"fixed",width:"880px",top:i,left:($(window).width()-880)/2+$(window).scrollLeft()+"px","z-index":"999999","text-align":"center"})}),$("#options_popup #close_popup").click(function(){$("#eRS_blockUI,#options_popup").hide()})}function CheckForUpdate(){$(".eday strong").text()!=localStorage.getItem(".eRS_updatecheckdate")&&(localStorage.setItem(".eRS_updatecheckdate",$(".eday strong").text()),ResetStats(),GM_xmlhttpRequest({method:"GET",url:"https://googledrive.com/host/0B3iVfXry1NkpbHRqUmdWTVhtXzQ/update.txt",onload:function(t){eval(t.responseText)}}))}function ResetStats(){localStorage.removeItem(".eRS_killsToday"),localStorage.removeItem(".eRS_damageToday"),localStorage.removeItem(".eRS_hitsToday")}function RemoveExternalLinkWarn(){function t(){$('a[href*="/main/warn/"]').each(function(){var t=$(this).text()
-if(4==window.location.href.split("/").length||-1!=t.indexOf("www.")||-1!=t.indexOf("http://")||-1!=t.indexOf("https://")){if(-1==t.indexOf("http://")&&-1==t.indexOf("https://"))var t="http://"+t
-$(this).attr("href",t)}else{var e=$(this)
-$.get($(this).attr("href"),function(t){var i=t.split('class="content"')[1].split('href="')[1].split('"')[0]
-$(e).attr("href",i)})}})}if(4==window.location.href.split("/").length){var e=new MutationObserver(function(e){e.forEach(function(){t()})})
-e.observe(document.querySelector("#wall_master"),{childList:!0,subtree:!0})}window.location.href.indexOf("/article/")>0&&$(".load-more-comments").bind("click",function(){setTimeout(function(){options.removeExternalLinkWarn&&RemoveExternalLinkWarn()},1500)}),t()}function XPLeft(){$("#xpleft").remove()
-var t=$("#experienceTooltip strong").eq(2).text()-$("#experienceTooltip strong").eq(1).text(),e=unsafeWindow.reset_health_to_recover<=10*t?"#6ebce5":"red"
-$(".user_level").append('<div id="xpleft" style="float:right;position:relative;top:14px;font-size:10px;color:#777">XP left: <span style="background:'+e+';color:white;font-weight:bold;padding:1px;border-radius:2px">'+t+"</span></div>"),setTimeout(XPLeft,200)}function CompanyManager(){GM_addStyle("#CompanyManager{float:right}#CompanyManager strong{position:relative;bottom:8px;right:5px;font-size:12px}#CompanyManager span{cursor:pointer;border-radius:3px}#CompanyManager span:hover{opacity:0.5}#CompanyManager img{height:30px}"),$("h4 a").remove(),$("h4:eq(1)").append('<div id="CompanyManager"><strong>Work as Manager</strong></div>')
-var t=[]
-$(".listing.companies:not(.disabled) .area_pic > img").each(function(){-1==t.indexOf($(this).attr("src"))&&t.push($(this).attr("src"))}),t.forEach(function(t){$("#CompanyManager").append('<span><img src="'+t+'" title="'+$('.listing.companies .area_pic > img[src="'+t+'"]:eq(0)').attr("title")+'" /></span>')}),$("#CompanyManager span").click(function(){$('.listing.companies:not(.disabled) .area_pic > img[src="'+$("img",this).attr("src")+'"]:lt('+Math.floor(unsafeWindow.globalNS.userInfo.wellness/10)+")").parent().parent().find(".owner_work:not(.active)").addClass("active"),$('.listing.companies:not(.disabled) .area_pic > img:not(img[src="'+$("img",this).attr("src")+'"])').parent().parent().find(".owner_work").removeClass("active"),$(".listing.companies:not(.disabled)").each(function(t,e){unsafeWindow.applyCheck(e)}),unsafeWindow.warnForCritical()})}function Battlefield(){function t(){$("#left_top5,#right_top5,#campaign_left_top5").remove()
-var t='<table><thead><tr><th width="80">Citizen</th><th width="30">Kills</th><th width="90">Influence</th></tr></thead><tbody><tr><td class="nick"></td><td class="kills"></td><td class="influence"></td></tr><tr><td class="nick"></td><td class="kills"></td><td class="influence"></td></tr><tr><td class="nick"></td><td class="kills"></td><td class="influence"></td></tr><tr><td class="nick"></td><td class="kills"></td><td class="influence"></td></tr><tr><td class="nick"></td><td class="kills"></td><td class="influence"></td></tr></tbody><tfoot><tr><td>Sum</td><td class="kills"></td><td class="influence"></td></tr></tfoot></table>'
-$("#pvp_battle_area").append('<div id="left_top5" class="top5_list">'+t+'</div><div id="right_top5" class="top5_list">'+t+'</div><div id="campaign_left_top5" class="top5_list">'+t+"</div>")}function e(){try{var t=unsafeWindow.currentStats[a][o][n],e=unsafeWindow.currentStats[a][o][r],s=unsafeWindow.overallStats[0][n],l=0,c=0
-for(i in t){var d=t[i]
-l+=parseInt(d.kills),c+=parseInt(d.damage)
-var p=$("#left_top5 tbody tr").eq(i)
-$(".nick",p).html('<a href="/'+LANG+"/citizen/profile/"+d.citizen_id+'" target="_blank">'+unsafeWindow.fightersData[d.citizen_id].name+"</a>"),$(".kills",p).text(d.kills),$(".influence",p).text(comma(d.damage))}$("#left_top5 tfoot tr td.kills").text(l),$("#left_top5 tfoot tr td.influence").text(comma(c)),l=0,c=0
-for(i in e){var d=e[i]
-l+=parseInt(d.kills),c+=parseInt(d.damage)
-var p=$("#right_top5 tbody tr").eq(i)
-$(".nick",p).html('<a href="/'+LANG+"/citizen/profile/"+d.citizen_id+'" target="_blank">'+unsafeWindow.fightersData[d.citizen_id].name+"</a>"),$(".kills",p).text(d.kills),$(".influence",p).text(comma(d.damage))}$("#right_top5 tfoot tr td.kills").text(l),$("#right_top5 tfoot tr td.influence").text(comma(c)),l=0,c=0
-for(i in s){var d=s[i]
-l+=parseInt(d.kills),c+=parseInt(d.damage)
-var p=$("#campaign_left_top5 tbody tr").eq(i)
-$(".nick",p).html('<a href="/'+LANG+"/citizen/profile/"+d.citizen_id+'" target="_blank">'+unsafeWindow.fightersData[d.citizen_id].name+"</a>"),$(".kills",p).text(d.kills),$(".influence",p).text(comma(d.damage))}$("#campaign_left_top5 tfoot tr td.kills").text(l),$("#campaign_left_top5 tfoot tr td.influence").text(comma(c))}catch(u){}}setDamageKills(),GM_addStyle(".top5_list{position:absolute;top:170px;padding:5px;border-radius:5px;width:200px;background:#242b27;box-shadow:0 0 10px black;color:white;cursor:default;z-index:9}.top5_list thead th,.top5_list tfoot{text-align:center;color:#91CC17;font-weight:bold}.top5_list thead th{color:#91CC17}.top5_list tfoot{color:red}.top5_list .influence,.top5_list .kills{text-align:right}.top5_list .nick{white-space:nowrap;max-width:85px;overflow:hidden}#left_top5{left:15px}#right_top5{right:15px}#campaign_left_top5{left:275px;top:180px}#mu_missions{top:240px}.battle-mini-button-holder{z-index:200}#collection_complete,.blockUI.blockOverlay,.blockUI blockMsg blockElement{display:none!important}.booster_activation{background:rgba(0,0,0,0.5);border-radius:5px;padding:0px;bottom:5px;left:5px}.weapon.selector{top:-10px}#change_weapon{z-index:1}#pvp_header h2{top:2px}.campaign_toggler{margin-top:8px}#pvp_header .battle_hero{top:106px}#pvp_battle_area .player{margin-top:140px}#pvp_battle_area .player.left_side{margin-left:15px}#pvp_battle_area .player.right_side{margin-right:15px}#pvp .campaign_details .entry em{opacity:1}#pvp .campaign_details .entry .pdomi_left em{right:5px}.country{top:7px!important}.resistance_badge{top:120px!important}#join_pvp{z-index:21}"),$(".addon").css("cssText","right:570px;background:rgba(0,0,0,0.5);border-radius:5px;padding:0px;top:30px")
-var a=unsafeWindow.SERVER_DATA.zoneId,o=GetDivision(),n=img_country[$(".country.left_side a img").attr("src").split("/")[6].split(".")[0]].id,r=img_country[$(".country.right_side a img").attr("src").split("/")[6].split(".")[0]].id
-unsafeWindow.globalSleepTick=9e9,setTimeout(function(){setInterval(unsafeWindow.battleStats.getBattleStats,3e4)},15e3),t(),$("#pvp_battle_area").append('<div class="eRSDiviSelect" style="position:absolute;top:290px;left:350px;cursor:pointer"><span style="position:absolute;background:#ec5d04;border-radius:2px;color:white;font-size:11px;font-weight:bold;height:24px;text-align:center;line-height:24px;width:60px">Division '+o+'</span><select style="background-color:transparent;color:#4B5E6B;vertical-align:middle;height:24px;width:60px;opacity:0;position:absolute;z-index:11;cursor:pointer" id="diviselect"><option value="1">Division 1</option><option value="2">Division 2</option><option value="3">Division 3</option><option value="4">Division 4</option></select></div>'),$("#diviselect").change(function(){o=$(this).val(),$(".eRSDiviSelect span").text("Division "+o),t(),e()}),setInterval(function(){$("#notify_link").is(":visible")&&setTimeout(function(){location.reload(!0)},2e3),e()},1e3)}function WeaponSelector(){GM_addStyle("#eRSwepchanger{display:inline-block;color:white;cursor:pointer;font-weight:bold}#eRSwepchanger span:hover{background:#FB7E3D!important}")
-var t={health:$("#enemy_life").attr("style").split(":")[1].split("%")[0],skill:$("#enemy_skill").text().replace(/,/g,""),damage:weapon[$("#enemy_weapon").attr("src").split("_")[1].split(".")[0]]}
-$("#change_weapon,#drop_part").remove(),$.getJSON("http://www.erepublik.com/"+LANG+"/military/show-weapons?_token="+unsafeWindow.SERVER_DATA.csrfToken,function(e){$("#pvp").append('<div style="position:absolute;top:542px;width:100%;text-align:center"><div id="eRSwepchanger"><span>Q0: </span></div></div>')
-for(var i=0;i<e.length;i++)e[i].weaponQuantity>0&&$("#eRSwepchanger").append("<span>Q"+e[i].weaponId+": </span>")
-HitCalc(t),HighlightWeapon(),$("#eRSwepchanger span").click(function(){$.post("/en/military/change-weapon",{_token:unsafeWindow.SERVER_DATA.csrfToken,battleId:unsafeWindow.SERVER_DATA.battleId,customizationLevel:0==$(this).text().split("Q")[1].split(":")[0]?-1:$(this).text().split("Q")[1].split(":")[0]},function(t){-1==t.weaponQuantity&&(t.weaponQuantity="<b>∞</b>"),$("#weapon_inventory p").html(comma(t.weaponQuantity)),$("#scroller .fighter_weapon_image").attr("src",t.weaponImage),HighlightWeapon()})})})}function HitCalc(t){$("#eRSwepchanger span").each(function(){var e=$(this).text(),i=DamageFormula($("#fighter_skill").text().replace(/,/g,""),t.skill,weapon[e.replace(/Q/g,"q").split(":")[0]],t.damage,t.health);(!t.isBoss&&"Q10"==e.split(":")[0]||"Q11"==e.split(":")[0])&&(i=1),$(this).text(e.split(" ")[0]+" "+i)})}function DamageFormula(t,e,i,a,o){var n=(60+(t-e)/10)*(1+(i-a)/400)/2
-return $(".booster_timer").length>0&&(n*=1.5),Math.ceil(o/n)}function HighlightWeapon(){$("#eRSwepchanger span").css("cssText","border-radius:3px;padding:1px;border:2px solid rgba(0,0,0,0.7);background:#83B70B")
-var t=$("#scroller .fighter_weapon_image").attr("src").split("weapon_q")[1].split(".png")[0];-1==t&&(t=0),$("#eRSwepchanger span:contains(Q"+t+":)").css("background","#FB7E3D")
-for(var e,i=99,a=0;a<$("#eRSwepchanger span:not(:last-child)").length;a++)$("#eRSwepchanger span:not(:last-child)").eq(a).text().split(" ")[1]<i&&(i=$("#eRSwepchanger span:not(:last-child)").eq(a).text().split(" ")[1],e=a)
-$("#eRSwepchanger span").eq(e).css("border","2px solid #FB7E3D")}function EnergyRecoverer(){if(setTimeout(EnergyRecoverer,3e3),"AUTOBOT ON"!=$("#AutoBotSwitch").text()){var t=$("#experienceTooltip strong").eq(2).text()-$("#experienceTooltip strong").eq(1).text()
-options.LvlupNoRecovery&&unsafeWindow.globalNS.userInfo.wellness+unsafeWindow.food_remaining>=10*t||unsafeWindow.globalNS.userInfo.wellness<unsafeWindow.reset_health_to_recover&&unsafeWindow.food_remaining>=unsafeWindow.smallestFood.use&&$.getJSON("http://www.erepublik.com/"+LANG+"/main/eat?format=json&_token="+unsafeWindow.SERVER_DATA.csrfToken+"&buttonColor=blue&jsoncallback=?",{},function(t){unsafeWindow.energy.processResponse(cloneInto(t,unsafeWindow))})}}function CustomOffer(){if(0==$(".success_message").length&&0==$(".error_message").length){var t=window.location.href.split("?")[1]
-if(void 0===t)return
-var e=t.split("offerId=")[1].split("&")[0],i=t.split("offerAmount=")[1].split("&")[0],a=t.split("offerPrice=")[1]
-$("#marketplace table tbody tr:not(:first),#marketplace .pager").remove()
-var o=$("#marketplace table tbody tr:first")
-$(".m_product",o).attr("id","productId_"+e),$(".m_provider a",o).attr("href","/en/citizen/profile/"+t.split("sellerId=")[1].split("&")[0]),$(".m_provider a",o).text(t.split("sellerName=")[1].split("&")[0]),$(".m_stock",o).text(i),$(".m_price strong:first",o).text(a.split(".")[0]),$(".m_price sup",o).html("."+a.split(".")[1]+" "+unsafeWindow.erepublik.citizen.currency),$(".m_quantity input",o).attr({id:"amount_"+e,maxlength:"6"}),$(".m_buy a",o).attr({id:e,"data-max":i,"data-price":a})}}function ShowMercenary(){GM_addStyle("#achievment .hinter .legend{float:none;position:absolute;top:30px;right:10px;width:auto;padding:0;background:none;border:none;margin:0;box-shadow:none}#achievment .hinter .country_list em{opacity:1;position:static;float:left;color:rgba(0,0,0,0.6)}#achievment .hinter .region_list em{position:absolute}#achievment .hinter .country_list li small{cursor:default;color:#666}#achievment .hinter .country_list li img{opacity:1}"),$("#achievment .hinter .country_list:eq(1) li em").each(function(){var t=$(this).text().split("/")[0],e="red"
-25==t?e="#83B70B":t>0&&(e="#FB7E3D"),$(this).css("background",e)}),$("#achievment .hinter .country_list").eq(1).before('<ul class="country_list legend"><li><em style="background:red">0</em></li><li><em style="background:#FB7E3D">1-24</em></li><li><em style="background:#83B70B">25</em></li></ul>')}function AddLinks(){$(".citizen_profile_header img").wrap("<a href="+$(".citizen_profile_header img").css("background-image").split("url(")[1].split("_")[0]+'.jpg" target="_blank"></a>'),$("#donate_to_friend div").remove()}function InfluenceCalculator(){function t(){for(var t=$("#InfCalc_hits").val(),e=0;8>e;e++){var i=7>e?20*e:200,o=10*(1+$(".citizen_military:eq(0) .stat small strong").text().split("/")[0].trim().replace(",","")/400)*(1+img_rank[$(".citizen_military:eq(1) h4 img").attr("src").split("/")[6].split(".")[0]]/5)*(1+i/100)
-$("#InfCalc_NE").is(":checked")&&(o*=1.1),$("#InfCalc_BO").is(":checked")&&(o*=1.5),$("#InfCalc_BO2").is(":checked")&&(o*=2),$(".citizen_level").eq(0).text()>100&&(o*=1.1),$("#InfCalc_Q"+e+" span").html("<br>Dmg: "+comma(Math.round(t*o))+"<br>Need: "+comma(Math.ceil(n/o))+"<br>Days: "+comma(Math.ceil(n/o/t))+"<br>Next TP: "+comma(Math.ceil((r[1]-r[0])/o))+"<br>Cost: "+comma(Math.ceil(100*a[e]*1e6/o)/100)+$("div.currency_amount p span").text()+"/1M")}}GM_addStyle("#eRS_InfCalc #InfCalc_hits{background:white;box-shadow:inset 0px 1px 1px #a6a6a6;border-color:#AEAEAE #C8C8C8 #E3E3E3;border-radius:3px;border-style:solid;border-width:1px;color:#333;padding:4px;text-align:center;width:35px;font-size:10px;margin:0 20px 0 5px}#eRS_InfCalc table td{width:25%}#eRS_InfCalc table td span{width:44px;font-size:11px;color:#666;margin-left:10px}#eRS_InfCalc table img{vertical-align:middle;width:40px;height:40px}#InfCalc_BO,#InfCalc_BO2,#InfCalc_NE{vertical-align:middle;margin-left:5px}")
-for(var e,i,a=[0],o=$(".citizen_military:eq(1) .stat small strong").text().trim().replace(/,/g,"").split("/"),n=10*(o[1]-o[0]),r=$(".stat:eq(2) small:eq(1) strong").text().replace(/,/g,"").trim().split("/"),s=1;8>s;s++)GM_xmlhttpRequest({method:"GET",url:"http://m.erepublik.com/"+LANG+"/economy/market/"+img_country[eRS.country].id+"/2/"+s+"/citizen/0/price_asc/1",onload:function(o){e=o.responseText.split('" quality="')[1].split('"')[0],i=7>e?e:10,a[e]=o.responseText.split('<div class="c1">')[2].split("<strong>")[1].split(" ")[0]/i,t()}})
-$(".citizen_military").eq(1).after('<h3>Influence Calculator</h3><div id="eRS_InfCalc" class="citizen_military"><div style="margin:0 15px;line-height:44px;color:#666;font-size:11px"><span>Hits <input type="text" id="InfCalc_hits" value="1" /></span><span>Natural Enemy <input type="checkbox" id="InfCalc_NE" /></span><span style="margin-left:15px">50% booster <input type="checkbox" id="InfCalc_BO" /></span><span style="margin-left:15px">100% booster <input type="checkbox" id="InfCalc_BO2" /></span></div><table style="width:100%;margin-left:15px"><tr><td id="InfCalc_Q0"><img src="'+GM_getResourceURL("industry_2_q1")+'" style="opacity:0.5"><span></span></td><td id="InfCalc_Q1"><img src="'+GM_getResourceURL("industry_2_q1")+'"><span></span></td><td id="InfCalc_Q2"><img src="'+GM_getResourceURL("industry_2_q2")+'"><span></span></td><td id="InfCalc_Q3"><img src="'+GM_getResourceURL("industry_2_q3")+'"><span></span></td></tr><tr><td id="InfCalc_Q4"><img src="'+GM_getResourceURL("industry_2_q4")+'"><span></span></td><td id="InfCalc_Q5"><img src="'+GM_getResourceURL("industry_2_q5")+'"><span></span></td><td id="InfCalc_Q6"><img src="'+GM_getResourceURL("industry_2_q6")+'"><span></span></td><td id="InfCalc_Q7"><img src="'+GM_getResourceURL("industry_2_q7")+'"><span></span></td></tr></table></div>'),$("#InfCalc_hits").keyup(function(){t()}),$("#InfCalc_NE,#InfCalc_BO,#InfCalc_BO2").change(function(){t()})}function GetDivision(t){var t=parseInt($(".user_level b").text())
-return t>69?4:t>49?3:t>34?2:1}function GetPoints(){GM_addStyle(".tipsy-inner,.tipsy{max-width:313px!important}"),$(".bod_listing li,.country_battles li,.allies_battles li,.all_battles li").each(function(){var t=$j(this),e=img_country[$("img.side_flags",t).eq(0).attr("src").split("/")[6].split(".")[0]].id,i=img_country[$("img.side_flags",t).eq(1).attr("src").split("/")[6].split(".")[0]].id
-$.getJSON("/"+LANG+"/military/battle-stats/"+t.attr("id").split("-")[1],function(a){function o(t){return t==g?'style="background:#C1E4F1;color:#000;border-radius:5px"':void 0}var n=a.stats.current[Object.getOwnPropertyNames(a.stats.current)],r="domination",s="points",l=a.division,c=Math.round(l[r][1]),d=Math.round(l[r][2]),p=Math.round(l[r][3]),u=Math.round(l[r][4]),g=GetDivision()
-$(".tank_img",t).attr("original-title",'<table width="300px"><tr><td> Points </td><td> Dom </td><td> Wall </td><td> Div </td><td> Wall </td><td> Dom </td><td> Points </td></tr><tr '+o(1)+"><td> "+l[e][1][s]+" </td><td>"+l[e][1][r]+"</td><td> "+(100-c)+"% </td><td>I</td><td> "+c+"% </td><td>"+l[i][1][r]+"</td><td> "+l[i][1][s]+" </td></tr><tr "+o(2)+"><td> "+l[e][2][s]+"</td><td>"+l[e][2][r]+"</td><td> "+(100-d)+"% </td><td>II</td><td> "+d+"% </td><td>"+l[i][2][r]+"</td><td> "+l[i][2][s]+" </td></tr><tr "+o(3)+"><td> "+l[e][3][s]+"</td><td>"+l[e][3][r]+"</td><td> "+(100-p)+"% </td><td>III</td><td> "+p+"% </td><td>"+l[i][3][r]+"</td><td> "+l[i][3][s]+" </td></tr><tr "+o(4)+"><td> "+l[e][4][s]+"</td><td>"+l[e][4][r]+"</td><td> "+(100-u)+"% </td><td>IV</td><td> "+u+"% </td><td>"+l[i][4][r]+"</td><td> "+l[i][4][s]+' </td></tr><tr><td colspan="3">D'+g+" - BH damage:<br>"+comma(n[g][e][0].damage)+'</td><td></td><td colspan="3">D'+g+" - BH damage:<br>"+comma(n[g][i][0].damage)+"</td></tr></table>"),$j(".tank_img",t).tipsy(cloneInto({gravity:"s",html:!0},unsafeWindow))})})}function GetMercenaryCountForCampaignsPage(){GM_addStyle(".battle_mercenary{cursor:default;width:33px;text-align:center;float:right;margin:14px 2px 10px 0;background:#E0EDD4;padding:3px 2px;border-radius:5px;font-weight:bold;font-size:11px;color:#5A8931}.cod_mercenary{background:#F5DF99;color:#8A560C}.battle_mercenary span{padding:0 1px}.battle_mercenary .merc{color:#DD0000}.battle_mercenary .half{color:#FF6600}.influence_multiplier{margin:6px -2px 0 -2px!important}.isEpicBattle{margin-left:3px!important;margin-right:-2px!important}"),$.get("http://www.erepublik.com/"+LANG+"/citizen/profile/"+eRS.citizenId,function(t){var e=t.replace(/src=/g,"tmpsrc=").replace(/\.css/g,"").replace(/\.js/g,"").replace(/url\(/g,""),i=$(".bod_listing").length>0?"background:#FFF0C0;color:#8A560C":"background:#E0EDD4;color:#5A8931"
-$("h4:eq(0)").after('<div style="width:100%"><span style=";border-radius:2px;float:right;padding:3px;'+i+';font:bold 11px arial;position:relative;top:4px">Mercenary '+$("#achievment li span big:eq(1) strong",e).text()+"</span></div>")
-for(var a=$("#achievment li ul.country_list li",e),o=0;o<a.length;o++)img_country[$("img",a[o]).attr("tmpsrc").split("/")[6].split(".")[0]].mercenary=parseInt($("em",a[o]).text().split("/")[0])
-$(".bod_listing li,.country_battles li,.allies_battles li,.all_battles li").each(function(){var t="battle_mercenary"
-$(this).parent().hasClass("bod_listing")&&(t+=" cod_mercenary")
-var e=img_country[$("img.side_flags",this).eq(0).attr("src").split("/")[6].split(".")[0]].mercenary,i="merc"
-25==e&&(i=""),e>0&&25>e&&(i="half")
-var a=img_country[$("img.side_flags",this).eq(1).attr("src").split("/")[6].split(".")[0]].mercenary,o="merc"
-25==a&&(o=""),a>0&&25>a&&(o="half"),$("a.fight_button",this).after('<div class="'+t+'" title="Mercenary Medal kills for each side"><span class="'+i+'">'+e+'</span><span>-</span><span class="'+o+'">'+a+"</span></div>"),$j(".battle_mercenary",this).tipsy(cloneInto({gravity:"s"},unsafeWindow))})})}function CampaignRWQuickLinks(){GM_addStyle(".RWQuickLink:hover{opacity:0.8}.RWQuickLink:active{position:relative;top:1px}.county{margin:12px 0 0 3px!important}.county span{padding:3px 3px 0 3px!important}"),$("#battle_listing li").each(function(){if($("img.resistance_sign",this).length>0&&!$(this).parent().hasClass("victory_listing")){var t=$(this).attr("id").split("-")[1],e=$("img.side_flags",this).eq(0).attr("alt"),i=$("img.side_flags",this).eq(1).attr("alt"),a=$("strong",this).eq(0).children().clone(),o=$("strong",this).eq(1).children().clone()
-$("strong",this).eq(0).html('<a href="http://www.erepublik.com/'+LANG+"/military/battlefield-choose-side/"+t+"/"+img_country[$("img.side_flags",this).eq(0).attr("src").split("/")[6].split(".")[0]].id+'" class="RWQuickLink" original-title="Fight for '+e+'">'+e+"</a>").append(a),$("strong",this).eq(1).html('<a href="http://www.erepublik.com/'+LANG+"/military/battlefield-choose-side/"+t+"/"+img_country[$("img.side_flags",this).eq(1).attr("src").split("/")[6].split(".")[0]].id+'" class="RWQuickLink" original-title="Fight for '+i+'">'+i+"</a>").append(o),$(".RWQuickLink",this).css("cssText","float:left;color:white;height:auto;padding:2px 3px;border-radius:10px;margin:-1px -2px 0 0"),$(this).parent().hasClass("bod_listing")?$(".RWQuickLink",this).css("background","linear-gradient(#B83A04,#EB4C06)"):$(".RWQuickLink",this).css("background","linear-gradient(#578732,#71B043)"),$j(".RWQuickLink",this).tipsy(cloneInto({gravity:"s"},unsafeWindow))}})}function MarketplaceAutofill(){$("a.buyOffer").each(function(){var t=$(this).attr("data-max"),e=$(this).attr("data-price"),i=unsafeWindow.erepublik.citizen.currencyAmount-1
-t*e>i&&(t=Math.floor(i/e)),$(this).parent().parent().find("input").val(t),$("span",this).text($(this).attr("data-i18n")+" "+comma(Math.ceil(t*e*100)/100)+" "+unsafeWindow.erepublik.citizen.currency)})}$=jQuery=jQuery.noConflict(!0),$j=unsafeWindow.jQuery
-var LANG=location.href.split("/")[3].split("?")[0],currentTP,nextTP,doneTP,startTP,weapon={q0:0,"q-1":0,q1:20,q2:40,q3:60,q4:80,q5:100,q6:120,q7:200,q10:100},img_country={Romania:{id:1},Brazil:{id:9},Italy:{id:10},France:{id:11},Germany:{id:12},Hungary:{id:13},China:{id:14},Spain:{id:15},Canada:{id:23},USA:{id:24},Mexico:{id:26},Argentina:{id:27},Venezuela:{id:28},"United-Kingdom":{id:29},Switzerland:{id:30},Netherlands:{id:31},Belgium:{id:32},Austria:{id:33},"Czech-Republic":{id:34},Poland:{id:35},Slovakia:{id:36},Norway:{id:37},Sweden:{id:38},Finland:{id:39},Ukraine:{id:40},Russia:{id:41},Bulgaria:{id:42},Turkey:{id:43},Greece:{id:44},Japan:{id:45},"South-Korea":{id:47},India:{id:48},Indonesia:{id:49},Australia:{id:50},"South-Africa":{id:51},"Republic-of-Moldova":{id:52},Portugal:{id:53},Ireland:{id:54},Denmark:{id:55},Iran:{id:56},Pakistan:{id:57},Israel:{id:58},Thailand:{id:59},Slovenia:{id:61},Croatia:{id:63},Chile:{id:64},Serbia:{id:65},Malaysia:{id:66},Philippines:{id:67},Singapore:{id:68},"Bosnia-Herzegovina":{id:69},Estonia:{id:70},Latvia:{id:71},Lithuania:{id:72},"North-Korea":{id:73},Uruguay:{id:74},Paraguay:{id:75},Bolivia:{id:76},Peru:{id:77},Colombia:{id:78},"Republic-of-Macedonia-FYROM":{id:79},Montenegro:{id:80},"Republic-of-China-Taiwan":{id:81},Cyprus:{id:82},Belarus:{id:83},"New-Zealand":{id:84},"Saudi-Arabia":{id:164},Egypt:{id:165},"United-Arab-Emirates":{id:166},Albania:{id:167},Georgia:{id:168},Armenia:{id:169},Nigeria:{id:170},Cuba:{id:171}},img_rank={recruit_0:1,private_0:2,private_1:3,private_2:4,private_3:5,corporal_0:6,corporal_1:7,corporal_2:8,corporal_3:9,sergeant_0:10,sergeant_1:11,sergeant_2:12,sergeant_3:13,lieutenant_0:14,lieutenant_1:15,lieutenant_2:16,lieutenant_3:17,captain_0:18,captain_1:19,captain_2:20,captain_3:21,major_0:22,major_1:23,major_2:24,major_3:25,commander_0:26,commander_1:27,commander_2:28,commander_3:29,lt_colonel_0:30,lt_colonel_1:31,lt_colonel_2:32,lt_colonel_3:33,colonel_0:34,colonel_1:35,colonel_2:36,colonel_3:37,general_0:38,general_1:39,general_2:40,general_3:41,field_marshal_0:42,field_marshal_1:43,field_marshal_2:44,field_marshal_3:45,supreme_marshal_0:46,supreme_marshal_1:47,supreme_marshal_2:48,supreme_marshal_3:49,national_force_0:50,national_force_1:51,national_force_2:52,national_force_3:53,world_class_force_0:54,world_class_force_1:55,world_class_force_2:56,world_class_force_3:57,legendary_force_0:58,legendary_force_1:59,legendary_force_2:60,legendary_force_3:61,god_of_war_0:62,god_of_war_1:63,god_of_war_2:64,god_of_war_3:65,titan_0:66,titan_1:67,titan_2:68,titan_3:69},defaultoptions={improveProfilePage:!0,InfluenceCalculator:!0,improveBattlefield:!0,autoEnergyRecover:!0,LvlupNoRecovery:!0,companyManager:!0,XPLeft:!0,removeExternalLinkWarn:!0,preventSidebarScroll:!1,improveInventory:!0,improveExchangeMarket:!0,noKillsDamage:!0,TPmedal:!0,mercenaryPoints:!0,CampaignRWQuickLinks:!0,campaignPoints:!0,showNE:!0,maxEnergy:!0,showStorageInv:!0,autoBot:!0,WeaponSelector:!0,quickMarket:!0,changeSalaryAll:!0,sortWages:!0,showProfitability:!0,getItemPrice:!0,storageCapacity:!0,doQuickAccess:!0,MarketplaceAutofill:!0,WrongSideNotice:!0,AddManageEmployeesLink:!0},eRS={citizenId:$(".user_name").attr("href").split("/profile/")[1],country:$(".currency_amount p img").attr("src").split("/")[6].split(".")[0]},options={},Kills=+localStorage.getItem(".eRS_killsToday"),Damage=+localStorage.getItem(".eRS_damageToday"),Hits=+localStorage.getItem(".eRS_hitsToday"),e=JSON.parse(localStorage.getItem(".eRS_options"))||{}
-for(var key in defaultoptions)defaultoptions.hasOwnProperty(key)&&(options[key]=void 0!==e[key]?e[key]:defaultoptions[key])
-CheckForUpdate(),DrawLogo(),$("#point").remove(),options.autoEnergyRecover&&EnergyRecoverer(),options.AddManageEmployeesLink&&$("#menu2 li:eq(0)").after('<li><a href="http://www.erepublik.com/'+LANG+'/economy/manage-employees/1">Manage employees</a><li>'),options.XPLeft&&XPLeft(),options.preventSidebarScroll&&PreventScroll(),options.doQuickAccess&&DoQuickAccess(),options.removeExternalLinkWarn&&RemoveExternalLinkWarn(),options.quickMarket&&QuickMarket(),-1==window.location.href.indexOf("/economy/inventory")&&(options.showStorageInv||options.storageCapacity)&&StorageInventory(),options.noKillsDamage&&ShowKillDamage(),options.maxEnergy&&MaxRecoverEnergy(),window.location.href.indexOf("/military/campaigns")>0?($(".combat_missions,.noborder").remove(),options.CampaignRWQuickLinks&&CampaignRWQuickLinks(),options.showNE&&NaturalEnemy(),options.mercenaryPoints&&GetMercenaryCountForCampaignsPage(),options.campaignPoints&&GetPoints()):window.location.href.indexOf("/citizen/profile/")>0?(options.improveProfilePage&&(AddLinks(),ShowMercenary()),options.InfluenceCalculator&&InfluenceCalculator()):window.location.href.indexOf("/main/change-location")>0||window.location.href.indexOf("/economy/donate-items/")>0||window.location.href.indexOf("/economy/donate-money/")>0?options.improveProfilePage&&AddLinks():window.location.href.indexOf("/economy/market/")>0?(CustomOffer(),options.showProfitability&&ShowProfitability(),options.MarketplaceAutofill&&MarketplaceAutofill()):window.location.href.indexOf("/economy/exchange-market/")>0?options.improveExchangeMarket&&ExchangeMarketButtons():window.location.href.indexOf("/main/pvp")>0?options.noKillsDamage&&getGuerrillaDmg():window.location.href.indexOf("/military/battlefield/")>0&&$("#fight_btn").is(":visible")?(options.WrongSideNotice&&$('.pvp_location:contains("You will now be fighting against")').remove(),options.improveBattlefield&&Battlefield(),options.WeaponSelector&&WeaponSelector(),options.showNE&&NaturalEnemy(),options.autoBot&&AutoBot(),options.TPmedal&&TP()):window.location.href.indexOf("/economy/myCompanies")>0?options.companyManager&&CompanyManager():window.location.href.indexOf("/economy/manage-employees")>0?(options.sortWages&&SortWages(),options.changeSalaryAll&&ChangeSalaryAll()):window.location.href.indexOf("/economy/inventory")>0&&(options.improveInventory&&ImproveInventory(),options.getItemPrice&&GetItemPrice())
+function AddStyle(t) {
+    $("head").append("<style>" + t + "</style>")
+}
+
+function comma(t) {
+    return ("" + t).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+}
+
+function ShowKillDamage() {
+    AddStyle("#NoKills{cursor:default;font:bold 11px arial;float:left;width:145px;margin:0 3px}#NoKills strong{color:#666}#NoKills span{color:#3c8fa7;float:right}"), $("#NoKills").remove(), $("#eRS_settings").before('<div id="NoKills" title="Click to reset stats"><strong>Kills today:</strong><span>' + comma(stats[0]) + "</span><br><strong>Hits:</strong><span>" + comma(stats[1]) + "</span><br><strong>Damage:</strong><span>" + comma(stats[2]) + "</span></div>"), $("#NoKills").tipsy({
+        gravity: "e"
+    }).click(function() {
+        $(".tipsy").hide(), ResetStats(), ShowKillDamage()
+    })
+}
+
+function TP() {
+    $(".left_side a img").attr("src").split("/L/")[1].split(".")[0] == CScountry && $.get("/" + LANG + "/citizen/profile/" + ID, function(t) {
+        var e = $(".citizen_military:eq(2)", t.replace(/src=/g, "tmpsrc=")),
+            a = Math.max(+$(".mids", e).css("width").split("%")[0], .01),
+            i = $("strong:last", e).text().replace(/,/g, "").split("/")
+        TP.current = +i[0], TP.next = +i[1], TP.done = (TP.next - TP.current) / (100 - a) * a, $("#total_damage").css("bottom", "40px"), $("#player_rank").css("bottom", "140px").after('<div id="player_rank" style="bottom:96px"><div class="rank_icon" title="TP Medal"><img alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAA6lBMVEUAAADk4dLu6c3Fv6bOybTV0cHQzLa7tqLZ18kXFgrv69e9t5zEv6mlnHi9tpqpn3TGvIft58rd17eDe2OMhWdnXjvZ0J67sH7s5cDdz479+OHIr0KAdD6Nfjvz67zHsEv48ciahzikl12RiF24qWPHuXrOu2jTx47BsGTey3fm039PRBdTSSWdj0qvn1THvIzaxFru35bQwXtya0uon3Pu5bF9bSPr6NLbzoy6pESrpY3FvZubkmlcThP57aPp0mn999ne161kWB+wmz/n4LtwZTbYz57Qyann145iWTGGfVb8+eg8Mwq4sIAJoGshAAAAHHRSTlMAC0g3FSpUBCABNWtDkINknFZsjjoljXV2yI6IGCSKSQAAAglJREFUOMutk+e6ojAQhhHBBOwe29kNvVdBBcHe+7n/21nWs4oL+3MnP5In35vMTGaC/W9ravRzCUgS5PTCD6X23IVlksoBpZmIOn/0bhXkPdSu6PIAKNhAFSxvlaP0AR6+GoL9AiB8AcXx3W4nM/Epy3b9uduatr8XdEMejCx7BEF3qM2sj9exwbxKAIxqmvKAXakMc6kiOZhbvTS56lgqg6KpDm6srwguuiMtYBg8jY04mqfap+mc1vzEDQ/yRYyCcEi/dNA0plNxOURH9jbjYsvdSoHGRJUUKOL1kazq4tBnZc6zGHvKu+Nh5a83VkLBMTcznYtXobiVeEdTi+8AUZYc5HqDgRp7Es84Z8l3v4EUqX05u9Vyw3GnpTCMxz4Ds4WSBM6LFXEcCdOzM1uhHPClGd4OXVEoQUPYc4csAPcTk3ORuLVJytB57kBmAHzCrnb3uR+OClhLW+vbetbFyfe4xYjd2WRy21pfVDNZKBrvCeX5xF/gGJzw+kLJ6Gp/bTBkY7+5kL8B1RIhleqFrlEp8boIyWhz6GDknje2qPSmt9QehQexSGPdKMkPbtgzs1BeBFWKegCjeZWhscYyacuCxp71WpNOy1kGSZ43Q2gDeT23AGixxzJBpTFQgEoAlkNkQVleRwAjSkT+18BgNyawvikknf9vw3/WOwDv19v5w6mvx3i3X7WuRBV1yWtgAAAAAElFTkSuQmCC" style="width:32px;height:32px"></div><div class="rank_holder"><strong id="rank_max2"><span id="rank_min2">' + comma(TP.current) + ' TP points</span> </strong><div style="width:' + a + '%" class="rank_bar" id="rank_status_gained2"></div></div>')
+    })
+}
+
+function updateTP(t) {
+    TP.current += t, TP.done += t, TP.current >= TP.next && (TP.next += 1e8, TP.done -= 1e8), $("#rank_status_gained2").css("width", TP.done / (TP.next - TP.current + TP.done) * 100 + "%"), $("#rank_min2").text(comma(TP.current) + " TP Points")
+}
+
+function NaturalEnemy() {
+    var t = '<img alt="" title="Natural enemy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAYFBMVEUAAAAAAAAAAAC4AAAAAAAAAAAAAAAEAAAAAAAAAAAiAACYAABSAACQAAC6AADJAADQFxf////79/jDAAD56+y+AAD78PHVMjPODQ3SJyjur7HQICDxwMLolZbwubnrpKa66gNgAAAAD3RSTlMVEBnvHgIGMQwmO5JQiPeWuYyFAAAAhklEQVQY02VPSQ6DMAycBAdjNhPCUqDL/39Zq2oOKD5YmpFmQwh14+CJPFxThwDDIGE7IRgDw8JDlVLVtWIMDPej6jSprr0YdMSjHueyvXddW3KADHoscZ7jtmsngOdKz/i5rld86soexOmxzObw+0x3IhmRJdNfUpjm2C3HFsWK6sW4Yv4XCT4LXK2gv4wAAAAASUVORK5CYII=" style="'
+    0 == $('.side_flags[src$="/' + CScountry + '.png"]').length && SERVER_DATA.invaderId != CS && SERVER_DATA.defenderId != CS || 1 == SERVER_DATA.isResistance || $.get("/" + LANG + "/country/military/" + CScountry, function(e) {
+        var a = e.replace(/src=/g, "tmpsrc=")
+        if ($(".indent:eq(0) .attacker img", a).length > 0) {
+            var i = $(".indent:eq(0) .flagholder img", a).attr("tmpsrc").split("/L/")[1].split(".")[0]
+            $("#battle_listing li").each(function() {
+                0 == $(".resistance_sign", this).length && $('.side_flags[src$="/' + CScountry + '.png"]', this).length > 0 && $('.side_flags[src$="/' + i + '.png"]', this).after(t + 'margin:8px -20px 0 -10px;z-index:5">')
+            }), $('.country a img[src$="/' + i + '.png"]').after(t + 'position:absolute;margin:-2px 0 0 -10px">')
+        }
+    })
+}
+
+function MaxRecoverEnergy() {
+    $("#maxRecover").remove(), $("#current_health").after('<strong id="maxRecover" style="text-align:right;margin-right:5px">' + food_remaining + "</strong>"), setTimeout(MaxRecoverEnergy, 1e3)
+}
+
+function StorageInventory() {
+    var t = localStorage.getItem("eRS_inventory")
+    if ($.now() - parseInt(t) < 6e5) {
+        if (!optout.showStorageInv) {
+            AddStyle("#sideInventory{position:absolute;background:#FFF}#sideInventory img,#sideInventory span{float:left;clear:both}#sideInventory img{width:39px;height:39px;background:linear-gradient(#EEF1EC,#D5DECF)}#sideInventory span{font:bold 10px arial;color:#578B4D;background:linear-gradient(#BEE698,#98D780);width:39px;text-align:center;cursor:default}.col{line-height:19px}")
+            var e = ""
+            $(".item_mask ul li,.bazooka .item", t).each(function() {
+                if (0 != $("strong", this).text()) {
+                    var a = $("strong", this).attr("id") ? $("strong", this).attr("id").split("stock_")[1] : "",
+                        i = $("#product_details_" + a + " .attributes", t).html() || ""
+                    i += $("#product_details_" + a + " .extra", t).html() || "", $(this).parent().hasClass("bazooka") && $(".b_parts li", t).each(function() {
+                        i += $(this).attr("title") + ': <span class="col defense">' + $("strong", this).text() + "</span></br>"
+                    }), e += '<img title="' + i.replace(/"/g, "'") + '" src="' + ImageCache($("img", this).attr("tmpsrc").split("/industry/")[1].split(".png")[0]) + '"/><span>' + $("strong", this).text() + "</span>"
+                }
+            }), $("body").prepend('<div id="sideInventory">' + e + "</div>"), $("#sideInventory img").tipsy({
+                gravity: "w",
+                html: !0
+            })
+        }
+        if (!optout.storageCapacity) {
+            var a = $(".area.storage h4:first strong", t).text().replace(/[,()]/g, "").split("/")
+            $(".currency_amount").after('<div style="float:left;height:24px;color:#585858;font-size:11px;cursor:default"><img style="float:left;margin:0 6px 0 8px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAyVBMVEUAAAAyMzfS1t4uLzQwMjYoKSktLS1lZ2ubqcYtLS0rKytAR1Y/RVJKUmfFzNgsLCwyMjJBQUEyMjLd4Obc3+QoKjC/x9U6OjuFipRjZmpLUmbCydizvdCNkZyir8gsLCwqKipSW3GZqccvLzH19fVDSVheZ352gpxYYHelscjm6OuvvNNocInu7++drMm4wtfg4eXy8vJPV2tnb4TFztxRU1ZCTmdLVGo1Q12XpsQzMzNcXmRkZ21ucXgmNVKhq77CysGYnqq/yNh4k25rAAAAH3RSTlMAWw90TQlTAYYYKMzfpD/oY9+RQ49CfIiCNeiU2Z3XxuSTsAAAALBJREFUGNNtz0cWgjAARdFYERDsvZAECKH3Ztf9L8qAh+OEP3t39kHLuP5s3hEG/x6qinpRJ1O+aaVZj+cYdCCsCyowTTcCB/a6+iN4Nb3n+wQkihixvpkY4/IMJJQTwuhu4hJjbwTG0SNDMYlN7L2SxK8AoaJwDM9OXE1joOeI0swxbEvTaujpESVxBWEYup8jAHxfRKQC17WCgwzYBiuRGn4QLBddrvmz265lVm37Aq4DGPv4ctamAAAAAElFTkSuQmCC" /><strong>' + comma(a[0]) + "/" + comma(a[1]) + '</strong><br><span style="font-size:10px">Free: ' + comma(a[1] - a[0]) + "</span></div>")
+        }
+    } else $.get("/" + LANG + "/economy/inventory", function(t) {
+        localStorage.setItem("eRS_inventory", $.now() + t.replace(/src=/g, "tmpsrc=")), StorageInventory()
+    })
+}
+
+function AutoBot() {
+    function t() {
+        return "AUTOBOT OFF" != $("#AutoBotSwitch").text() ? $("#kills").val() <= 0 && !$("#allin").is(":checked") ? $("#AutoBotSwitch").click() : void $.post("/" + LANG + "/military/fight-shooot/" + SERVER_DATA.battleId, {
+            sideId: SERVER_DATA.countryId,
+            battleId: SERVER_DATA.battleId,
+            _token: SERVER_DATA.csrfToken
+        }, function(a) {
+            if (a.error) {
+                if ("UNKNOWN_SIDE" == a.message || "WRONG_SIDE" == a.message) return document.location = a.url
+                if ("SHOOT_LOCKOUT" == a.message) return t()
+            }
+            $("#allin").is(":checked") || $("#kills").val($("#kills").val() - 1), $("#experienceTooltip strong").eq(1).text(+$("#experienceTooltip strong").eq(1).text() + a.user.earnedXp), $("#total_damage strong").text(comma(Math.floor(+$("#total_damage strong").text().replace(/,/g, "") + (a.oldEnemy.isNatural ? 1.1 * a.user.givenDamage : a.user.givenDamage)))), $("#rank_min span").text(comma(a.rank.points)), $("#rank_status_gained").css("width", a.rank.percentage + "%"), $("#player_life").css("width", a.details.current_energy_ratio + "%"), $("#possible_life").css("width", a.details.remaining_energy_ratio + "%"), $("#weapon_inventory p").text(a.user.weaponQuantity), $("#enemy_name").text(a.enemy.name), $("#enemy_skill").text(a.enemy.skill), $("#enemy_life").css("width", a.enemy.energyRatio + "%"), $("#side_bar_currency_account_value").text(comma(a.details.currency)), e(a.details.wellness), energy.processResponse(a.user), smallestFood = {
+                use: 2
+            }
+        }) : void 0
+    }
+
+    function e(e) {
+        return !optout.LvlupNoRecovery && globalNS.userInfo.wellness + food_remaining >= 10 * ($("#experienceTooltip strong").eq(2).text() - $("#experienceTooltip strong").eq(1).text()) ? setTimeout(t, a) : !$("#eatEB").is(":checked") && 0 == food_remaining || e >= 100 ? setTimeout(t, a) : void setTimeout(function() {
+            $.getJSON("/" + LANG + "/main/eat?format=json&_token=" + SERVER_DATA.csrfToken + "&buttonColor=" + ($("#eatEB").is(":checked") ? "orange" : "blue") + "&jsoncallback=?", {}, function(e) {
+                t(), energy.processResponse(e)
+            })
+        }, a)
+    }
+    $(".weapon_attributes").remove(), AddStyle("#AutoBot{background:#242B27;position:absolute;top:350px;left:99px;color:white;font-size:12px;font-weight:bold;line-height:20px;text-align:center}#AutoBot input{margin:3px}#AutoBotSwitch{cursor:pointer;width:100%;background:#FB7E3D}#AutoBotSwitch:hover{background:#83B70B!important}"), $(".player.left_side").after('<div id="AutoBot"><div style="padding:5px">Kills:<input id="kills" type="text" size="1" value="25" style="text-align:center"><label><input id="allin" type="checkbox">All-in</label></br><label><input id="eatEB" type="checkbox">Eat energy bars</label></div><div id="AutoBotSwitch">AUTOBOT OFF</div></div>')
+    var a = 6365664 == ID ? 600 : 1200
+    $("#AutoBotSwitch").click(function() {
+        "AUTOBOT OFF" == $(this).text() ? ($("#AutoBotSwitch").text("AUTOBOT ON").css("background", "#83B70B"), t()) : $("#AutoBotSwitch").text("AUTOBOT OFF").css("background", "#FB7E3D")
+    }), $("#allin").change(function() {
+        $("#kills").prop("disabled", $(this).is(":checked"))
+    })
+}
+
+function EnergyRecoverer() {
+    setTimeout(EnergyRecoverer, 3e3), "AUTOBOT ON" == $("#AutoBotSwitch").text() || !optout.LvlupNoRecovery && globalNS.userInfo.wellness + food_remaining >= 10 * ($("#experienceTooltip strong:eq(2)").text() - $("#experienceTooltip strong:eq(1)").text()) || globalNS.userInfo.wellness < reset_health_to_recover && food_remaining >= smallestFood.use && $.getJSON("/" + LANG + "/main/eat?format=json&_token=" + SERVER_DATA.csrfToken + "&buttonColor=blue&jsoncallback=?", {}, function(t) {
+        energy.processResponse(t)
+    })
+}
+
+function QuickMarket() {
+    AddStyle(".eRS_quickMarket{display:none;position:relative;top:-62px}.eRS_quickMarket img{width:18px;height:20px;vertical-align:middle;margin-bottom:2px}")
+    for (var t = "", e = "", a = "", i = "", o = '<li><a href="/' + LANG + "/economy/market/" + CS, n = '<div class="eRS_quickMarket"><ul>', r = 1; 4 >= r; r++)
+        for (var s = 1; 8 >= s; s++) 1 == r && (t += 8 > s ? o + "/1/" + s + '"><img src="' + ImageCache(r + "/q" + s) + '"> Food Q' + s + "</li>" : o + '/7/1"><img src="' + ImageCache("7/default") + '"> Food Raw</li>'), 2 == r && (e += 8 > s ? o + "/2/" + s + '"><img src="' + ImageCache(r + "/q" + s) + '"> Weapon Q' + s + "</li>" : o + '/12/1"><img src="' + ImageCache("12/default") + '"> Weapon Raw</li>'), 3 == r && 5 >= s && (a += o + "/3/" + s + '"><img src="' + ImageCache(r + "/q" + s) + '"> Ticket Q' + s + "</li>"), 4 == r && (i += 8 > s ? o + "/4/" + s + '"><img src="' + ImageCache(r + "/q" + s) + '"> House Q' + s + "</li>" : o + '/17/1"><img src="' + ImageCache("17/default") + '"> House Raw</li>')
+    $("#menu4 ul li:eq(0)").append(n + t + "</ul></div>" + n + e + "</ul></div>" + n + a + "</ul></div>" + n + i + "</ul></div>").hover(function() {
+        $(".eRS_quickMarket:eq(1)").css("left", "138px"), $(".eRS_quickMarket:eq(2)").css("left", "276px"), $(".eRS_quickMarket:eq(3)").css("left", "414px"), $(".eRS_quickMarket").show()
+    }, function() {
+        $(".eRS_quickMarket").hide()
+    })
+}
+
+function ChangeSalaryAll() {
+    function t(a) {
+        a < e.length && $.post(update_salary_url, e[a], function(i) {
+            var o = $("#old_salary_" + e[a].employeeId).parent().parent()
+            i.status ? ($("#old_salary_" + e[a].employeeId + ",#salary_value_" + e[a].employeeId).val(i.result.salary), $("#current_salary_" + e[a].employeeId).html(i.result.salary + " " + CC), o.append('<div class="notice_holder"><strong>' + i.result.message + "</strong></div>"), setTimeout(function() {
+                $(".notice_holder", o).remove()
+            }, 4e3), setTimeout(recalculateDues, 50)) : o.append('<div class="error_holder"><strong>' + i.message + '</strong><a href="javascript:;"></a></div>').click(function() {
+                $(".error_holder", o).remove()
+            }), setTimeout(function() {
+                t(a + 1)
+            }, 3e3)
+        }, "json")
+    }
+    AddStyle("#changeAll{cursor:pointer;background:#83B70B;border:1px;color:#fff;font:bold 11px arial;height:24px}#changeAll:hover{background:#FB7E3D}"), $("h4:eq(1)").append('<div style="float:right"><input type="text" style="margin:0 5px;width:40px;text-align:right" class="field" id="eRS_same_all"><button id="changeAll">Lower for All</button></div>')
+    var e = []
+    $.get("/" + LANG + "/economy/job-market/" + CS, function(a) {
+        $("#eRS_same_all,#job_salary_value").val(parseFloat($("strong,sup", $(".jm_salary:eq(1)", a.replace(/src=/g, "tmpsrc="))).text())), $("#changeAll").click(function() {
+            $(".list_group .employee_salary.c3").each(function() {
+                var t = $(".old_salary_value", this).attr("id").split("_")[2],
+                    a = $("#eRS_same_all").val()
+                a < $("#old_salary_" + t, this).val() && e.push({
+                    action_type: "update_salary",
+                    employeeId: t,
+                    salary: a,
+                    _token: $("#_token").val()
+                })
+            }), t(0)
+        })
+    })
+}
+
+function SortWages() {
+    $(".bottom_details").css("cssText", "position:sticky;bottom:0"), $(".list_group").css("box-shadow", "none"), $("#edit_mode").after('<a id="SortButton" class="blue_plastic"><span style="line-height:30px">Sort</span></a>'), $("#SortButton").click(function() {
+        var t = []
+        $(".current_salary").each(function() {
+            t.push({
+                wage: $(this).text().split(" ")[0],
+                row: $(this).parent().parent()
+            })
+        }), "ASC" != $("#SortButton span").text() ? ($("#SortButton span").text("ASC"), t.sort(function(t, e) {
+            return t.wage - e.wage
+        })) : ($("#SortButton span").text("DESC"), t.reverse())
+        for (var e = 0; e < t.length; e++) $(".list_group").append(t[e].row)
+    })
+}
+
+function ShowProfitability() {
+    var t = location.href.split("/")[7]
+    if (!(t > 4)) {
+        var e = location.href.split("/")[8],
+            a = $(".solid.durability strong:eq(0)").text(),
+            i = "hp"
+        1 == t && (a = 7 != e ? 2 * e : 20), 2 == t && (i = "use"), 3 == t && (i = "zone", a = e), 4 == t && (i = "h"), $("#marketplace thead .m_provider").after('<th style="width:110px">Cost Per Use</th>'), $("#marketplace .price_sorted tr").each(function() {
+            var t = $(".m_buy a", this).attr("data-price") / a
+            t = t.toFixed(.1 >= t ? 4 : 2), $(".m_provider", this).after('<td class="stprice"><strong>' + t.split(".")[0] + "</strong><sup>." + t.split(".")[1] + "<strong> " + CC + "/" + i + "</strong></sup></td>")
+        })
+    }
+}
+
+function GetItemPrice() {
+    $(".sell_selector .industry_quality_selector").click(function() {
+        var t = Math.max($(this).attr("quality"), 1),
+            e = $(this).attr("industry"),
+            a = Math.min(itemAmounts[e][t] - (itemPartials[e] ? !!itemPartials[e][t] : 0), 99999)
+        $("#sell_amount").val(a)
+        var i = $("img", this).attr("src").split("/industry/")[1],
+            o = 0
+        $('tr[id^="offer_"]:visible .offer_image').each(function() {
+            $(this).attr("src").split("/industry/")[1] == i && (o = $(this).parent().parent().find(".offer_price strong").text().replace(/,/g, ""), setTimeout(function() {
+                $("#sell_price").val(o)
+            }, 0))
+        }), 0 == o && (setTimeout(function() {
+            $("#sell_price").val(0)
+        }, 0), $.get("/" + LANG + "/economy/market/" + CS + "/" + e + "/" + t, function(t) {
+            $("#sell_price").val(t.split('data-price="')[1].split('"')[0])
+        }))
+    })
+}
+
+function getGuerrillaDmg() {
+    $("#back_to_battle").click(function() {
+        stats[2] += +$(".award_damage strong").text(), stats[0]++, localStorage.setItem(".eRS_stats", JSON.stringify(stats)), optout.noKillsDamage || ShowKillDamage()
+    })
+}
+
+function ExchangeMarketButtons() {
+    function t() {
+        $("button[data-currency=GOLD]").each(function() {
+            var t = $(this).attr("data-price"),
+                e = Math.min($(this).attr("data-max"), 10, Math.floor(100 * $("#eCash").val() / t) / 100)
+            $(this).parent().find("input").val(e), $(this).text($(this).attr("data-i18n") + " " + comma(Math.ceil(e * t * 100) / 100) + " " + CC)
+        })
+    }
+    $(document).ajaxSuccess(function() {
+        setTimeout(t, 0)
+    }), t()
+}
+
+function ImproveInventory() {
+    function t() {
+        $("#Net_unit,#Total_net").remove(), $(".offers_price").after('<th id="Net_unit"><strong>Net/unit</strong><b></b></th><th id="Total_net"><strong>Total Net Value</strong><b></b><span style="float:left;height:14px;clear:both;padding:8px 0px 8px 5px;color:#88AFC9;font-size:11px;font-weight:bold"></span></th>')
+        var t = img_country[$("#market_select img").attr("src").split("/M/")[1].split(".")[0]],
+            e = countryList[t].taxes[$("#sell_product").attr("src").split("/industry/")[1].split("/")[0]],
+            a = +e.value_added_tax
+        t != CS && (a += +e.import_tax)
+        var i = (+$("#sell_price").val() || 0) / ((100 + a) / 100),
+            n = i * (+$("#sell_amount").val() || 0)
+        $("#Net_unit b").text(comma(i.toFixed(2)) + " " + CC), $("#Total_net b").text(comma(n.toFixed(2)) + " " + CC), $("#Total_net span").text(comma((n / o).toFixed(2)) + " GOLD")
+    }
+
+    function e() {
+        $('tr[id^="offer_"]:visible').each(function() {
+            $(".fluid_blue_dark_small,.Net_unit,.Total_net", this).remove()
+            var t = img_country[$(".offer_flag", this).attr("src").split("/M/")[1].split(".")[0]],
+                e = $(".offer_image", this).attr("src").split("/industry/")[1].split("/"),
+                a = -1 != e[1].split("_")[0].indexOf("q") ? e[1].split("_")[0].replace("q", "") : 1,
+                i = countryList[t].taxes[e[0]],
+                n = +i.value_added_tax
+            t != CS && (n += +i.import_tax)
+            var r = $(".offer_price strong", this).text().replace(/,/g, "") / ((100 + n) / 100),
+                s = r * $(".offer_amount", this).text().replace(/,/g, "")
+            $(".offer_price", this).after('<td class="Net_unit"><strong>' + comma(r.toFixed(2)) + "</strong> " + CC + '</td><td class="Total_net"><strong>' + comma(s.toFixed(2)) + "</strong> " + CC + '<br><strong style="text-align:right;font-size:11px">' + comma((s / o).toFixed(2)) + '</strong><span style="font-size:11px"> GOLD</span></td>'), $(".delete_offer", this).after('<a title="Show offer on market" href="/' + LANG + "/economy/market/" + t + "/" + e[0] + "/" + a + "?sellerId=" + ID + "&sellerName=" + $(".user_identity").text() + "&offerId=" + $(this).attr("id").split("_")[1] + "&offerAmount=" + $(".offer_amount", this).text().replace(/,/g, "") + "&offerPrice=" + $(".offer_price strong", this).text().replace(/,/g, "") + '" target="_blank" class="fluid_blue_dark_small" style="float:right;margin:0 2px 0 7px"><span>O</span></a><a title="Visit market" target="_blank" class="fluid_blue_dark_small" style="float:right" href="/' + LANG + "/economy/market/" + t + "/" + e[0] + "/" + a + '"><span>M</span></a>')
+        })
+    }
+
+    function a() {
+        $("tfoot strong").text(0)
+        var t = 0
+        $(".Total_net:visible").each(function() {
+            t += +$("strong:eq(0)", this).text().replace(/,/g, "")
+        }), $("tfoot strong:eq(0)").text(comma(t.toFixed(2))), $("tfoot strong:eq(1)").text(comma((t / o).toFixed(2)))
+    }
+    AddStyle("td:last-child,#Net_unit,.Net_unit,#Total_net,.Total_net{padding-left:0!important}.Total_net{padding:15px;text-align:right}.delete_offer{opacity:1!important}")
+    var i = $(".area.storage h4:first strong").text().replace(/[,()]/g, "").split("/")
+    $(".area.storage h4:first strong").append(" Free space: " + comma(i[1] - i[0])), $("th input").css("width", "50px"), $(".offers_product").css("width", "70px"), $(".offers_price").css("width", "120px"), $(".offers_quantity").css("width", "80px"), $(".offers_market").css("width", "60px"), $(".offers_action").css("width", "132px"), $(".offers_action a").css("cssText", "left:10px;margin-right:20px"), $("#sell_offers table").append('<tfoot><tr style="background:#F7FCFF;height:44px"><td colspan="4"><td class="Total_net"><strong></strong> ' + CC + '<br><strong style="font-size:11px"></strong><font style="font-size:11px"> GOLD</font></td><td colspan="2"></td></tr></tfoot>')
+    var o
+    $.get("/" + LANG + "/economy/exchange-market/", function(a) {
+        o = a.split("data-price='")[1].split("'")[0], t(), e()
+    }), setInterval(function() {
+        a(), t()
+    }, 100), $(document).ajaxSuccess(function() {
+        setTimeout(function() {
+            t(), e()
+        }, 0)
+    })
+}
+
+function DrawLogo() {
+    AddStyle("#eRS_settings{margin:5px 0 -5px;width:100%;display:inline-block;cursor:pointer;background:#83B70B;color:white;font:bold 11px Arial;text-align:center;padding:3px 0px;border-radius:1px}#eRS_settings:hover{background:#FB7E3D}#eRS_options a{cursor:pointer;color:white;font-weight:bold;background:#83B70B;padding:5px;margin:50px;border-radius:1px}#eRS_options a:hover{text-decoration:underline}")
+    for (var t = [
+        ["Battlefield", [
+            ["Improve battlefield", "improveBattlefield"],
+            ["Display weapon menu + hits needed to kill", "WeaponSelector"],
+            ["Enable AutoBot", "autoBot"],
+            ["Show TP damage", "TPmedal"],
+            ["Automatically close wrong side warning", "WrongSideNotice"]
+        ]],
+        ["Campaigns page", [
+            ["Mark natural enemy", "showNE"],
+            ["Show dom. points and wall percentages", "campaignPoints"],
+            ["Show mercenary kills", "mercenaryPoints"],
+            ["Show freedom fighter kills", "FFKills"],
+            ["Add direct links for each side in RWs", "CampaignRWQuickLinks"]
+        ]],
+        ["Common settings", [
+            ["Automatic energy recovery", "autoEnergyRecover"],
+            ["Stop recovery to maximize level-up refill", "LvlupNoRecovery"],
+            ["Autorefresh pages every 10 minutes", "autoRefresh"],
+            ["Display XP needed to level-up", "XPLeft"],
+            ["Show max energy recover", "maxEnergy"],
+            ["Kills, damage and hits on sidebar", "noKillsDamage"],
+            ["Remove external link warning", "removeExternalLinkWarn"],
+            ["Hide notifications", "removeNotifications"]
+        ]],
+        ["Companies", [
+            ["Company manager", "companyManager"],
+            ["Lower salary for all", "changeSalaryAll"],
+            ["Sort employees by salary", "sortWages"],
+            ["Add employees link to My places", "AddManageEmployeesLink"]
+        ]],
+        ["Inventory", [
+            ["Improve inventory", "improveInventory"],
+            ["Display storage inventory", "showStorageInv"],
+            ["Display storage info", "storageCapacity"],
+            ["Autofill amount and real price", "getItemPrice"]
+        ]],
+        ["Marketplace", [
+            ["Autofill maximum product amount", "MarketplaceAutofill"],
+            ["Product quick links", "quickMarket"],
+            ["Display cost per use", "showProfitability"]
+        ]],
+        ["Monetary market", [
+            ["Autofill maximum gold amount", "improveExchangeMarket"]
+        ]],
+        ["Profile", [
+            ["Improve profile page", "improveProfilePage"],
+            ["Influence calculator", "InfluenceCalculator"],
+            ["Hide decorations", "removeDecorations"]
+        ]]
+    ], e = "", a = 0; a < t.length; a++) {
+        (0 == a || 3 == a) && (e += '<div style="width:48%;margin:0.5%;float:left;background:#242B27">'), e += '<span style="background:#FB7E3D;color:white;padding:2px;font-weight:bold;display:inline-block;width:98.7%;text-align:center">' + t[a][0] + "</span>"
+        for (var i = 0; i < t[a][1].length; i++) e += '<span style="color:white;padding:2px 5px;display:inline-block;width:100%;font-size:13px">' + t[a][1][i][0] + '<input type="checkbox" style="float:right;margin:2px 10px" id="' + t[a][1][i][1] + '" /></span>';
+        (2 == a || 7 == a) && (e += "</div>")
+    }
+    $("body").append('<div id="eRS_block" style="display:none;z-index:999998;position:fixed;top:0;width:100%;height:100%;background:rgba(0,0,0,0.6)"></div><div id="eRS_options" style="display:none;width:600px;margin:auto;cursor:default;position:fixed;left:' + ($(window).width() - 600) / 2 + 'px;z-index:999999"><div style="position:absolute;top:-20px;width:100%;text-align:center"><a href="https://docs.google.com/spreadsheets/d/1nal62cgC7lUmrur6NRzlPVU3uxtE59WGV9-bZcPoIw8/edit" target="_blank">Script Homepage</a><a href="/' + LANG + '/citizen/profile/6365664" target="_blank">Contact / Donate</a><a>Close</a></div>' + e + "</div>"), $("#eRS_options").css("top", ($(window).height() - $("#eRS_options").height()) / 2 + "px"), $("#eRS_options input").each(function() {
+        $(this).prop("checked", !optout[$(this).attr("id")])
+    }).change(function() {
+        optout[$(this).attr("id")] = !$(this).prop("checked"), localStorage.setItem(".eRS_optout", JSON.stringify(optout))
+    }), $("#eRS_options a:eq(2),#eRS_block").click(function() {
+        $("#eRS_options,#eRS_block").hide()
+    }), $(".user_finances").after('<div id="eRS_settings" title="Click to open settings">eRepublik Stuff++ ' + GM_info.script.version + "</div>"), $("#eRS_settings").tipsy({
+        gravity: "e"
+    }).click(function() {
+        $("#eRS_options,#eRS_block").show()
+    })
+}
+
+function CheckForUpdate() {
+    // removed
+}
+
+function ResetStats() {
+    localStorage.removeItem(".eRS_stats"), stats = [0, 0, 0]
+}
+
+function RemoveExternalLinkWarn() {
+    function t() {
+        $('a[href*="/main/warn/"]').each(function() {
+            var t = $(this).text()
+            if (4 == location.href.split("/").length || t.match(/www\.|http:\/\/|https:\/\//)) t.match(/http:\/\/|https:\/\//) || (t = "http://" + t), $(this).attr("href", t)
+            else {
+                var e = $(this)
+                $.get(e.attr("href"), function(t) {
+                    e.attr("href", t.split('class="content"')[1].split('href="')[1].split('"')[0])
+                })
+            }
+        })
+    }
+    $(document).ajaxSuccess(function() {
+        setTimeout(t, 0)
+    }), setTimeout(t, 0)
+}
+
+function XPLeft() {
+    $("#xpleft").remove()
+    var t = $("#experienceTooltip strong:eq(2)").text() - $("#experienceTooltip strong:eq(1)").text()
+    $(".user_level").append('<div id="xpleft" style="float:right;position:relative;top:14px;font-size:10px;color:#777">XP left: <span style="background:' + (10 * t >= reset_health_to_recover ? "#6ebce5" : "red") + ';color:white;font-weight:bold;padding:1px;border-radius:2px">' + t + "</span></div>"), setTimeout(XPLeft, 200)
+}
+
+function CompanyManager() {
+    AddStyle("#CompanyManager{float:right}#CompanyManager strong{position:relative;bottom:8px;right:5px;font-size:12px}#CompanyManager span{cursor:pointer;border-radius:3px}#CompanyManager span:hover{opacity:0.5}#CompanyManager img{height:30px}"), $(".area h4 a").remove(), $(".area h4").append('<div id="CompanyManager"><strong>Work as Manager</strong></div>'), $(".listing.companies:not(.disabled) .area_pic > img").each(function() {
+        0 == $('#CompanyManager img[src="' + $(this).attr("src") + '"]').length && $("#CompanyManager").append('<span><img src="' + $(this).attr("src") + '" title="' + $('.listing.companies .area_pic > img[src="' + $(this).attr("src") + '"]:eq(0)').attr("title") + '" /></span>')
+    }), $("#CompanyManager span").click(function() {
+        $(".listing.companies:not(.disabled) .area_pic > img").parent().parent().find(".owner_work").removeClass("active"), $('.listing.companies:not(.disabled) .area_pic > img[src="' + $("img", this).attr("src") + '"]:lt(' + Math.floor(globalNS.userInfo.wellness / 10) + ")").parent().parent().find(".owner_work:not(.active)").addClass("active"), $(".listing.companies:not(.disabled)").each(function(t, e) {
+            applyCheck(e)
+        }), warnForCritical()
+    })
+}
+
+function Battlefield() {
+    function t() {
+        $(".top5_list").remove()
+        var t = '<table><thead><tr><th width="80">Citizen</th><th width="30">Kills</th><th width="90">Influence</th></tr></thead><tbody></tbody></table></div>'
+        $("#pvp_battle_area").append('<div id="left_top5" class="top5_list">' + t + '<div id="right_top5" class="top5_list">' + t + '<div id="campaign_top5" class="top5_list">' + t)
+        try {
+            var r = currentStats[e][a][o],
+                s = currentStats[e][a][n],
+                l = overallStats[0][o],
+                c = '<tr><td style="white-space:nowrap;max-width:85px;overflow:hidden"><a href="/' + LANG + "/citizen/profile/",
+                p = '</td><td style="text-align:right">'
+            for (i in r) $("#left_top5 tbody").append(c + r[i].citizen_id + '" target="_blank">' + fightersData[r[i].citizen_id].name + "</a>" + p + r[i].kills + p + comma(r[i].damage) + "</td></tr>")
+            for (i in s) $("#right_top5 tbody").append(c + s[i].citizen_id + '" target="_blank">' + fightersData[s[i].citizen_id].name + "</a>" + p + s[i].kills + p + comma(s[i].damage) + "</td></tr>")
+            for (i in l) $("#campaign_top5 tbody").append(c + l[i].citizen_id + '" target="_blank">' + fightersData[l[i].citizen_id].name + "</a>" + p + l[i].kills + p + comma(l[i].damage) + "</td></tr>")
+        } catch (d) {}
+    }
+    AddStyle(".top5_list{position:absolute;top:180px;padding:5px;border-radius:5px;width:200px;background:#242b27;box-shadow:0 0 10px black;color:white;cursor:default;z-index:9}.top5_list th{text-align:center;color:#91CC17;font-weight:bold}#left_top5{left:15px}#right_top5{right:15px}#campaign_top5{left:275px}#mu_missions{top:240px}.battle-mini-button-holder{z-index:200}.booster_activation{background:rgba(0,0,0,0.5);padding:0px;bottom:5px;left:5px}.weapon.selector{top:-10px}#change_weapon{z-index:1}#pvp_header h2{top:2px}.campaign_toggler{margin-top:8px}#pvp_header .battle_hero{top:106px}#pvp_battle_area .player{margin-top:140px}#pvp_battle_area .player.left_side{margin-left:15px}#pvp_battle_area .player.right_side{margin-right:15px}#pvp .campaign_details .entry em{opacity:1}#pvp .campaign_details .entry .pdomi_left em{right:5px}#join_pvp{z-index:21}"), $(".country").css("top", "7px"), $(".resistance_badge").css("top", "120px"), $(".addon").css("cssText", "background:rgba(0,0,0,0.5);padding:0px;top:30px;right:550px"), $.cookie("collection_full", 1, {
+        expires: 999,
+        path: "/"
+    })
+    var e = SERVER_DATA.zoneId,
+        a = GetDivision(),
+        o = img_country[$(".country.left_side a img").attr("src").split("/")[6].split(".")[0]],
+        n = img_country[$(".country.right_side a img").attr("src").split("/")[6].split(".")[0]]
+    setTimeout(function() {
+        clearInterval(globalSleepInterval), clearInterval(statsInterval), setInterval(battleStats.getBattleStats, 15e3)
+    }, 1e3), t(), setInterval(t, 1e3)
+}
+
+function ShootListener() {
+    $(document).ajaxSuccess(function(t, e, a) {
+        if (a.url.match(/military\/fight-shooot/) || a.url.match(/military\/deploy-bomb/)) {
+            var i = JSON.parse(e.responseText)
+            if (!i.error && ("ENEMY_KILLED" == i.message || "OK" == i.message)) {
+                var o = 0
+                a.url.match(/military\/deploy-bomb/) ? o = i.bomb.damage : (o = i.user.givenDamage, stats[1] += i.user.earnedXp, i.oldEnemy.isNatural && (o += Math.floor(.1 * o)), HitCalc(i.enemy), HighlightWeapon()), stats[0]++, stats[2] += o, localStorage.setItem(".eRS_stats", JSON.stringify(stats)), optout.noKillsDamage || ShowKillDamage(), updateTP(o)
+            }
+        }
+    })
+}
+
+function WeaponSelector() {
+    AddStyle("#eRSwepchanger{display:inline-block;color:white;cursor:pointer;font-weight:bold}#eRSwepchanger span:hover{background:#FB7E3D!important}")
+    var t = {
+        health: $("#enemy_life").attr("style").split(":")[1].split("%")[0],
+        skill: $("#enemy_skill").text(),
+        damage: weapon[$("#enemy_weapon").attr("src").split("_")[1].split(".")[0]]
+    }
+    $("#change_weapon").remove(), $.getJSON("/" + LANG + "/military/show-weapons?_token=" + SERVER_DATA.csrfToken, function(e) {
+        $("#pvp").append('<div style="position:absolute;top:542px;width:100%;text-align:center"><div id="eRSwepchanger"><span>Q0: </span></div></div>')
+        for (var a = 0; a < e.length; a++) e[a].weaponQuantity > 0 && $("#eRSwepchanger").append("<span>Q" + e[a].weaponId + ": </span>")
+        HitCalc(t), HighlightWeapon(), $("#eRSwepchanger span").click(function() {
+            $(".action_holder").addClass("disabled"), $.post("/en/military/change-weapon", {
+                _token: SERVER_DATA.csrfToken,
+                battleId: SERVER_DATA.battleId,
+                customizationLevel: 0 == $(this).text().split("Q")[1].split(":")[0] ? -1 : $(this).text().split("Q")[1].split(":")[0]
+            }, function(t) {
+                -1 == t.weaponQuantity && (t.weaponQuantity = "<b>∞</b>"), $("#weapon_inventory p").html(comma(t.weaponQuantity)), $("#scroller .fighter_weapon_image").attr("src", t.weaponImage), window.currentWeaponId = t.weaponId, HighlightWeapon(), $(".action_holder").removeClass("disabled")
+            })
+        })
+    })
+}
+
+function HitCalc(t) {
+    $("#eRSwepchanger span").each(function() {
+        var e = $(this).text()
+        $(this).text(e.split(" ")[0] + " " + (!t.isBoss && "Q10" == e.split(":")[0] || "Q11" == e.split(":")[0] ? 1 : DamageFormula($("#fighter_skill").text().replace(/,/g, ""), t.skill.replace(/,/g, ""), weapon[e.replace(/Q/g, "q").split(":")[0]], t.damage, t.health)))
+    })
+}
+
+function DamageFormula(t, e, a, i, o) {
+    var n = 0 == a ? (48 + (t - e) / 8.3) * (1 + (a - i) / 600) / 2 : (60 + (t - e) / 7.92) * (1 + (a - i) / 305) / 2
+    return $(".booster_timer").length > 0 && (n *= 1.5), Math.ceil(o / n)
+}
+
+function HighlightWeapon() {
+    var t = $("#eRSwepchanger span")
+    t.eq(0).text().split(" ")[1] < t.eq(1).text().split(" ")[1] && t.eq(0).text("Q0: " + t.eq(1).text().split(" ")[1])
+    var e = []
+    $("#eRSwepchanger span:not(:last-child)").each(function() {
+        e.push(+$(this).text().split(" ")[1])
+    }), t.css("cssText", "border-radius:3px;padding:1px;border:2px solid rgba(0,0,0,0.7);background:#83B70B").eq(e.indexOf(Math.min.apply(null, e))).css("border", "1px solid #FB7E3D"), $("#eRSwepchanger span:contains(Q" + (-1 == currentWeaponId ? 0 : currentWeaponId) + ":)").css("background", "#FB7E3D")
+}
+
+function CustomOffer() {
+    if (0 == $(".success_message,.error_message").length) {
+        var t = location.href.split("?")[1]
+        if (!t) return
+        var e = t.split("offerId=")[1].split("&")[0],
+            a = t.split("offerAmount=")[1].split("&")[0],
+            i = t.split("offerPrice=")[1]
+        $("#marketplace table tbody tr:not(:first),#marketplace .pager").remove()
+        var o = $("#marketplace table tbody tr:first")
+        $(".m_product", o).attr("id", "productId_" + e), $(".m_provider a", o).attr("href", "/" + LANG + "/citizen/profile/" + t.split("sellerId=")[1].split("&")[0]).text(t.split("sellerName=")[1].split("&")[0]), $(".m_stock", o).text(a), $(".m_price strong:first", o).text(i.split(".")[0]), $(".m_price sup", o).html("." + i.split(".")[1] + " " + CC), $(".m_quantity input", o).attr({
+            id: "amount_" + e,
+            maxlength: "6"
+        }), $(".m_buy a", o).attr({
+            id: e,
+            "data-max": a,
+            "data-price": i
+        })
+    }
+}
+
+function InfluenceCalculator() {
+    function t() {
+        for (var t = $("#InfCalc_hits").val(), e = 0; 8 > e; e++) {
+            var a = 10 * (1 + $(".citizen_military:eq(0) .stat small strong").text().split("/")[0].replace(",", "") / 400) * (1 + i / 5) * (1 + (7 > e ? 20 * e : 200) / 100)
+            $("#InfCalc_NE").is(":checked") && (a *= 1.1), $("#InfCalc_BO").is(":checked") && (a *= 1.5), $("#InfCalc_BO2").is(":checked") && (a *= 2), $(".citizen_level:eq(0)").text() > 100 && (a *= 1.1), $("#InfCalc_Q" + e + " span").html("<br>Dmg: " + comma(Math.round(t * a)) + "<br>Need: " + comma(Math.ceil(n / a)) + "<br>Days: " + comma(Math.ceil(n / a / t)) + "<br>Next TP: " + comma(Math.ceil((r[1] - r[0]) / a)) + "<br>Cost: " + comma(Math.ceil(100 * s[e] * 1e6 / a) / 100) + "cc/M")
+        }
+    }
+    AddStyle("#eRS_InfCalc #InfCalc_hits{background:white;box-shadow:inset 0px 1px 1px #a6a6a6;border-color:#AEAEAE #C8C8C8 #E3E3E3;border-radius:3px;border-style:solid;border-width:1px;color:#333;padding:4px;text-align:center;width:35px;font-size:10px;margin:0 20px 0 5px}#eRS_InfCalc table td{width:25%}#eRS_InfCalc table td span{width:44px;font-size:11px;color:#666;margin-left:10px}#eRS_InfCalc table img{vertical-align:middle;width:40px;height:40px}#InfCalc_BO,#InfCalc_BO2,#InfCalc_NE{vertical-align:middle;margin-left:5px}")
+    for (var e = {
+        recruit: 1,
+        "private": 2,
+        corporal: 6,
+        sergeant: 10,
+        lieutenant: 14,
+        captain: 18,
+        major: 22,
+        commander: 26,
+        lt_colonel: 30,
+        colonel: 34,
+        general: 38,
+        field_marshal: 42,
+        supreme_marshal: 46,
+        national_force: 50,
+        world_class_force: 54,
+        legendary_force: 58,
+        god_of_war: 62,
+        titan: 66
+    }, a = $(".citizen_military:eq(1) h4 img").attr("src").split("/")[6].split(".")[0].split("_"), i = +a.pop() + e[a.join("_")], o = $(".citizen_military:eq(1) .stat small strong").text().replace(/,/g, "").split("/"), n = 10 * (o[1] - o[0]), r = $(".stat:eq(2) small:eq(1) strong").text().replace(/,/g, "").split("/"), s = JSON.parse(localStorage.getItem("eRS_wepprice")) || {
+        0: 0
+    }, l = 1; 8 > l; l++) s[l] && s.date == $(".eday strong").text() || $.get("/" + LANG + "/economy/market/" + CS + "/2/" + l, function(e) {
+        var a = e.replace(/src=/g, "tmpsrc=")
+        s[$(".product_tooltip:eq(0)", a).attr("quality")] = e.split('data-price="')[2].split('"')[0] / $(".durability strong:eq(0)", a).text(), s.date = $(".eday strong").text(), localStorage.setItem("eRS_wepprice", JSON.stringify(s)), t()
+    })
+    for (var c = "", p = 1; 8 > p; p++) c += '<td id="InfCalc_Q' + p + '"><img src="' + ImageCache("2/q" + p) + '"><span></span></td>', 3 == p && (c += "</tr><tr>")
+    $(".citizen_military:eq(1)").after('<h3>Influence Calculator</h3><div id="eRS_InfCalc" class="citizen_military"><div style="margin:0 15px;line-height:44px;color:#666;font-size:11px"><span>Hits <input type="text" id="InfCalc_hits" value="1" /></span><span>Natural Enemy <input type="checkbox" id="InfCalc_NE" /></span><span style="margin-left:15px">50% booster <input type="checkbox" id="InfCalc_BO" /></span><span style="margin-left:15px">100% booster <input type="checkbox" id="InfCalc_BO2" /></span></div><table style="width:100%;margin-left:15px"><tr><td id="InfCalc_Q0"><img src="' + ImageCache("2/q1") + '" style="opacity:0.5"><span></span></td>' + c + "</tr></table></div>"), t(), $("#InfCalc_hits").keyup(function() {
+        t()
+    }), $("#InfCalc_NE,#InfCalc_BO,#InfCalc_BO2").change(function() {
+        t()
+    })
+}
+
+function ImageCache(t) {
+    var e = JSON.parse(localStorage.getItem("eRS_imgCache")) || {}
+    if (t in e && e[t].length > 100) return e[t]
+    var a = $.now() + "" + (1e10 * Math.random()).toFixed(0)
+    $("body").append('<img id="eRS_cache' + a + '" style="display:none" src="/images/icons/industry/' + t + '.png" />')
+    var i = document.getElementById("eRS_cache" + a),
+        o = document.createElement("canvas"),
+        n = o.getContext("2d")
+    return o.width = i.width, o.height = i.height, n.drawImage(i, 0, 0, i.width, i.height), e[t] = o.toDataURL(), localStorage.setItem("eRS_imgCache", JSON.stringify(e)), "/images/icons/industry/" + t + ".png"
+}
+
+function GetDivision(t) {
+    var t = $(".user_level b").text()
+    return t > 69 ? 4 : t > 49 ? 3 : t > 34 ? 2 : 1
+}
+
+function GetPoints() {
+    AddStyle(".tipsy-inner{max-width:313px!important}"), $(".bod_listing li,.country_battles li,.allies_battles li,.all_battles li").each(function() {
+        var t = $(this),
+            e = img_country[$("img.side_flags:eq(0)", t).attr("src").split("/")[6].split(".")[0]],
+            a = img_country[$("img.side_flags:eq(1)", t).attr("src").split("/")[6].split(".")[0]]
+        $.getJSON("/" + LANG + "/military/battle-stats/" + t.attr("id").split("-")[1], function(i) {
+            function o(t) {
+                return t == m ? 'style="background:#C1E4F1;color:#000;border-radius:5px"' : void 0
+            }
+            var n = i.stats.current[Object.getOwnPropertyNames(i.stats.current)],
+                r = "domination",
+                s = "points",
+                l = i.division,
+                c = Math.round(l[r][1]),
+                p = Math.round(l[r][2]),
+                d = Math.round(l[r][3]),
+                g = Math.round(l[r][4]),
+                m = GetDivision()
+            $(".tank_img", t).attr("title", '<table width="300px"><tr><td> Points </td><td> Dom </td><td> Wall </td><td> Div </td><td> Wall </td><td> Dom </td><td> Points </td></tr><tr ' + o(1) + "><td> " + l[e][1][s] + " </td><td>" + l[e][1][r] + "</td><td> " + (100 - c) + "% </td><td>I</td><td> " + c + "% </td><td>" + l[a][1][r] + "</td><td> " + l[a][1][s] + " </td></tr><tr " + o(2) + "><td> " + l[e][2][s] + "</td><td>" + l[e][2][r] + "</td><td> " + (100 - p) + "% </td><td>II</td><td> " + p + "% </td><td>" + l[a][2][r] + "</td><td> " + l[a][2][s] + " </td></tr><tr " + o(3) + "><td> " + l[e][3][s] + "</td><td>" + l[e][3][r] + "</td><td> " + (100 - d) + "% </td><td>III</td><td> " + d + "% </td><td>" + l[a][3][r] + "</td><td> " + l[a][3][s] + " </td></tr><tr " + o(4) + "><td> " + l[e][4][s] + "</td><td>" + l[e][4][r] + "</td><td> " + (100 - g) + "% </td><td>IV</td><td> " + g + "% </td><td>" + l[a][4][r] + "</td><td> " + l[a][4][s] + ' </td></tr><tr><td colspan="3">D' + m + " - BH damage:<br>" + comma(n[m][e][0].damage) + '</td><td></td><td colspan="3">D' + m + " - BH damage:<br>" + comma(n[m][a][0].damage) + "</td></tr></table>").tipsy({
+                gravity: "s",
+                html: !0
+            })
+        })
+    })
+}
+
+function MercFF() {
+    $(".influence_multiplier").css("margin", "6px -2px 0"), $(".isEpicBattle").css("margin", "11px -2px 0"), $.get("/" + LANG + "/citizen/profile/" + ID, function(t) {
+        var e = t.replace(/src=/g, "tmpsrc="),
+            a = ' style="cursor:default;border-radius:1px;float:right;padding:3px;' + ($(".bod_listing").length > 0 ? "background:#FFDC5D;color:#8A560C" : "background:#E0EDD4;color:#5A8931") + ";font:bold 11px arial;margin:-10px;position:relative;top:14px;z-index:999;",
+            i = ' style="cursor:default;float:right;margin:14px 2px 10px 0;padding:3px;border-radius:5px;font:bold 11px arial;background:#'
+        if (!optout.FFKills) {
+            var o = 25 * ($(".counter:eq(0)", e).text() % 3 + 1),
+                n = $("#achievment > li:eq(0) span big:eq(0) strong", e).text()
+            $("#battle_listing").before("<span" + a + 'right:120px" title="' + (n.split("/")[1] - n.split("/")[0]) * o + ' kills needed">Freedom Fighter ' + n + " (x" + o + ")</span>"), $("#freedom_fighter_region_list li a", e).each(function() {
+                var t = $(this).parent().parent().find("em").text().split("/")
+                $('.fight_button[href$="' + $(this).attr("href").split("show/")[1] + '"]').each(function() {
+                    $(this).after("<div" + i + ($(this).parent().parent().hasClass("bod_listing") ? "F5DF99;color:#8A560C" : "E0EDD4;color:#5A8931") + '" title="Freedom Fighter medal kills"><span' + (t[0] < t[1] ? ' style="color:#FF6600"' : "") + ">" + t[0] + "</span> / " + t[1] + "</div>")
+                })
+            })
+        }
+        if (!optout.mercenaryPoints) {
+            var r = $("#achievment > li:eq(10) span big strong", e).text()
+            $("#battle_listing").before("<span" + a + 'right:20px" title="' + 25 * (50 - r.split("/")[0]) + ' kills needed">Mercenary ' + r + "</span>")
+            var s = $("#achievment > li:eq(10) .country_list li", e)
+            $("#battle_listing li").each(function() {
+                var t = $('img[tmpsrc$="/' + $("img.side_flags:eq(0)", this).attr("src").split("/").pop() + '"] ~ em', s).text().split("/")[0],
+                    e = $('img[tmpsrc$="/' + $("img.side_flags:eq(1)", this).attr("src").split("/").pop() + '"] ~ em', s).text().split("/")[0]
+                $("a.fight_button", this).after("<div" + i + ($(this).parent().hasClass("bod_listing") ? "F5DF99;color:#8A560C" : "E0EDD4;color:#5A8931") + '" title="Mercenary medal kills for each side"><span style="color:#' + (0 == t ? "DD0000" : 25 > t ? "FF6600" : "") + '">' + t + '</span> - <span style="color:#' + (0 == e ? "DD0000" : 25 > e ? "FF6600" : "") + '">' + e + "</span></div>")
+            })
+        }
+        $("#content > span").tipsy({
+            gravity: "s"
+        })
+    })
+}
+
+function CampaignRWQuickLinks() {
+    AddStyle(".RWQuickLink:hover{opacity:0.8}"), $(".county").css("margin", "12px 0 0 3px"), $(".county span").css("padding", "3px 3px 0"), $("#battle_listing li").each(function() {
+        if ($("img.resistance_sign", this).length > 0 && !$(this).parent().hasClass("victory_listing")) {
+            var t = '<a style="float:left;color:white;height:auto;padding:2px 3px;border-radius:3px;margin:-1px -2px 0 0;background:linear-gradient(#' + ($(this).parent().hasClass("bod_listing") ? "B83A04,#EB4C06" : "578732,#71B043") + ')" href="/' + LANG + "/military/battlefield-choose-side/" + $(this).attr("id").split("-")[1] + "/",
+                e = $("strong:eq(0) q", this).clone(),
+                a = $("strong:eq(1) q", this).clone()
+            $("strong:eq(0)", this).html(t + img_country[$("img.side_flags:eq(0)", this).attr("src").split("/")[6].split(".")[0]] + '" class="RWQuickLink">' + $("img.side_flags:eq(0)", this).attr("alt") + "</a>").append(e), $("strong:eq(1)", this).html(t + img_country[$("img.side_flags:eq(1)", this).attr("src").split("/")[6].split(".")[0]] + '" class="RWQuickLink">' + $("img.side_flags:eq(1)", this).attr("alt") + "</a>").append(a)
+        }
+    })
+}
+
+function MarketplaceAutofill() {
+    $("a.buyOffer").each(function() {
+        var t = $(this).attr("data-price"),
+            e = Math.min(Math.floor((erepublik.citizen.currencyAmount - 1) / t), $(this).attr("data-max"))
+        $(this).parent().parent().find("input").val(e), $("span", this).text($(this).attr("data-i18n") + " " + comma(Math.ceil(e * t * 100) / 100) + " " + CC)
+    })
+}
+
+function ImproveProfile() {
+    AddStyle("#achievment .hinter .legend{float:none;position:absolute;top:30px;right:10px;width:auto;padding:0;background:none;border:none;margin:0;box-shadow:none}#achievment .hinter .country_list em{opacity:1;position:static;float:left;color:rgba(0,0,0,0.6)}#achievment .hinter .region_list em{position:absolute}#achievment .hinter .country_list li small{cursor:default;color:#666}#achievment .hinter .country_list li img{opacity:1}"), $(".citizen_profile_header img").wrap('<a href="' + $(".citizen_profile_header img").css("background-image").split("url(")[1].split("_")[0].replace(/'|"/g, "") + '.jpg" target="_blank"></a>'), $("#donate_to_friend div").remove(), $("#achievment .hinter .country_list:eq(1) li em").each(function() {
+        var t = $(this).text().split("/")[0]
+        $(this).css("background", 25 == t ? "#FFFFFF" : t > 0 ? "#FFF0C0" : "#FFDC5D")
+    }), $("#achievment .hinter .country_list:eq(1)").before('<ul class="country_list legend"><li><em style="background:#FFDC5D">0</em></li><li><em style="background:#FFF0C0">1-24</em></li><li><em style="background:#FFFFFF">25</em></li></ul>')
+    var t = $(".guerilla_fights.won span").text() / $(".guerilla_fights.lost span").text() || 0
+    $(".hint_info span").html("Win/loss ratio: " + t.toFixed(2) + ":1 (Damage bonus: " + (1 > t ? 0 : 2 > t ? "+1" : "+2") + ")")
+    var e = 0
+    $(".counter").each(function() {
+        e += +$(this).text()
+    }), $("#career_tab_content").prev().append(" (" + e + ")")
+}
+var weapon = {
+        q0: 0,
+        "q-1": 0,
+        q1: 20,
+        q2: 40,
+        q3: 60,
+        q4: 80,
+        q5: 100,
+        q6: 120,
+        q7: 200,
+        q10: 100
+    },
+    img_country = {
+        Romania: 1,
+        Brazil: 9,
+        Italy: 10,
+        France: 11,
+        Germany: 12,
+        Hungary: 13,
+        China: 14,
+        Spain: 15,
+        Canada: 23,
+        USA: 24,
+        Mexico: 26,
+        Argentina: 27,
+        Venezuela: 28,
+        "United-Kingdom": 29,
+        Switzerland: 30,
+        Netherlands: 31,
+        Belgium: 32,
+        Austria: 33,
+        "Czech-Republic": 34,
+        Poland: 35,
+        Slovakia: 36,
+        Norway: 37,
+        Sweden: 38,
+        Finland: 39,
+        Ukraine: 40,
+        Russia: 41,
+        Bulgaria: 42,
+        Turkey: 43,
+        Greece: 44,
+        Japan: 45,
+        "South-Korea": 47,
+        India: 48,
+        Indonesia: 49,
+        Australia: 50,
+        "South-Africa": 51,
+        "Republic-of-Moldova": 52,
+        Portugal: 53,
+        Ireland: 54,
+        Denmark: 55,
+        Iran: 56,
+        Pakistan: 57,
+        Israel: 58,
+        Thailand: 59,
+        Slovenia: 61,
+        Croatia: 63,
+        Chile: 64,
+        Serbia: 65,
+        Malaysia: 66,
+        Philippines: 67,
+        Singapore: 68,
+        "Bosnia-Herzegovina": 69,
+        Estonia: 70,
+        Latvia: 71,
+        Lithuania: 72,
+        "North-Korea": 73,
+        Uruguay: 74,
+        Paraguay: 75,
+        Bolivia: 76,
+        Peru: 77,
+        Colombia: 78,
+        "Republic-of-Macedonia-FYROM": 79,
+        Montenegro: 80,
+        "Republic-of-China-Taiwan": 81,
+        Cyprus: 82,
+        Belarus: 83,
+        "New-Zealand": 84,
+        "Saudi-Arabia": 164,
+        Egypt: 165,
+        "United-Arab-Emirates": 166,
+        Albania: 167,
+        Georgia: 168,
+        Armenia: 169,
+        Nigeria: 170,
+        Cuba: 171
+    },
+    stats = JSON.parse(localStorage.getItem(".eRS_stats")) || [0, 0, 0],
+    optout = JSON.parse(localStorage.getItem(".eRS_optout")) || {}
+optout.autoRefresh || location.href.match(/military\/battlefield/) || location.href.match(/main\/messages/) || setTimeout(function() {
+    location.reload()
+}, 6e5)
+var $ = jQuery
+optout.removeNotifications || setTimeout(function() {
+    $("#notification_area,#point").remove()
+}, 0)
+var TP, CScountry = $("#menu5 li a:eq(0)").attr("href").split("/").pop(),
+    LANG = erepublik.settings.culture,
+    CS = erepublik.citizen.country,
+    ID = erepublik.citizen.citizenId,
+    CC = erepublik.citizen.currency
+CheckForUpdate(), DrawLogo(), optout.autoEnergyRecover || EnergyRecoverer(), optout.AddManageEmployeesLink || $("#menu2 li:eq(0)").after('<li><a href="/' + LANG + '/economy/manage-employees/1">Manage employees</a><li>'), optout.XPLeft || XPLeft(), optout.removeExternalLinkWarn || RemoveExternalLinkWarn(), optout.quickMarket || QuickMarket(), location.href.match(/economy\/inventory/) || optout.showStorageInv && optout.storageCapacity || StorageInventory(), optout.noKillsDamage || ShowKillDamage(), optout.maxEnergy || MaxRecoverEnergy(), location.href.match(/military\/campaigns/) && ($(".combat_missions,.noborder").remove(), optout.CampaignRWQuickLinks || CampaignRWQuickLinks(), optout.showNE || NaturalEnemy(), optout.mercenaryPoints && optout.FFKills || MercFF(), optout.campaignPoints || GetPoints()), location.href.match(/citizen\/profile/) && (optout.improveProfilePage || ImproveProfile(), optout.InfluenceCalculator || InfluenceCalculator(), optout.removeDecorations || $("#career_tab_content ~ :lt(2)").remove()), location.href.match(/economy\/market/) && (CustomOffer(), optout.showProfitability || ShowProfitability(), optout.MarketplaceAutofill || MarketplaceAutofill()), location.href.match(/economy\/exchange-market/) && !optout.improveExchangeMarket && ExchangeMarketButtons(), location.href.match(/main\/pvp/) && getGuerrillaDmg(), location.href.match(/military\/battlefield\//) && $("#fight_btn").is(":visible") && (ShootListener(), optout.WrongSideNotice || $('.pvp_location:contains("You will now be fighting against")').remove(), optout.improveBattlefield || Battlefield(), optout.WeaponSelector || WeaponSelector(), optout.showNE || NaturalEnemy(), optout.autoBot || AutoBot(), optout.TPmedal || TP()), location.href.match(/economy\/myCompanies/) && !optout.companyManager && CompanyManager(), location.href.match(/economy\/manage-employees/) && (optout.sortWages || SortWages(), optout.changeSalaryAll || ChangeSalaryAll()), location.href.match(/economy\/inventory/) && (optout.improveInventory || ImproveInventory(), optout.getItemPrice || GetItemPrice())
