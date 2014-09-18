@@ -2,7 +2,7 @@
 // @name          Employees Report
 // @description   Export employees data to TSV
 // @include       http://www.erepublik.com/*/economy/manage-employees/*
-// @version       1.2
+// @version       1.3
 // @grant         none
 // ==/UserScript==
 
@@ -19,13 +19,11 @@ listings.each(function (index, e) {
 
   var day = 1;
   jQuery(e).find('div.employee_presence > div.working_days > span').each(function (index, e) {
-    var status;
+    var status = 0;
     if (jQuery(e).hasClass('worked')) {
-      status = 1;
+      status = parseInt(jQuery(e).find('b').html().trim());
     } else if (jQuery(e).hasClass('nan')) {
-      status = null
-    } else {
-      status = 0;
+      status = null;
     }
     row['day' + day] = status;
     day++;
