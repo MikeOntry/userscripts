@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name		  eRepublik Stuff--
-// @version		2.5.2
+// @name		eRepublik Stuff--
+// @version		2.5.9
 // @include		*www.erepublik.com/*
 // ==/UserScript==
 
@@ -53,35 +53,32 @@ function maxEnergy() {
   setTimeout(maxEnergy, 1000)
 }
 function displayStorage() {
-  var t = localStorage.getItem('eRS_inventory')
-  if ($.now() - parseInt(t) < 600000) {
+  $.get('/' + LANG + '/economy/inventory', function (t) {
+    var e = t.replace(/src=/g, 'tmpsrc=')
     if (!eRS.showStorageInv) {
       style('#sideInventory{position:absolute;background:#FFF}#sideInventory img,#sideInventory span{float:left;clear:both}#sideInventory img{width:39px;height:39px;background:linear-gradient(#EEF1EC,#D5DECF)}#sideInventory span{font:bold 10px arial;color:#578B4D;background:linear-gradient(#BEE698,#98D780);width:39px;text-align:center;cursor:default}.col{line-height:19px}')
-      var e = ''
-      $('.item_mask ul li,.bazooka .item', t).each(function () {
+      var a = ''
+      $('.item_mask ul li,.bazooka .item', e).each(function () {
         if (0 !== + $('strong', this).text()) {
-          var a = $('strong', this).attr('id') ? $('strong', this).attr('id').split('stock_') [1] : '',
-          i = $('#product_details_' + a + ' .attributes', t).html() || ''
-          i += $('#product_details_' + a + ' .extra', t).html() || '',
-          $(this).parent().hasClass('bazooka') && $('.b_parts li', t).each(function () {
+          var t = $('strong', this).attr('id') ? $('strong', this).attr('id').split('stock_') [1] : '',
+          i = $('#product_details_' + t + ' .attributes', e).html() || ''
+          i += $('#product_details_' + t + ' .extra', e).html() || '',
+          $(this).parent().hasClass('bazooka') && $('.b_parts li', e).each(function () {
             i += $(this).attr('title') + ': <span class="col defense">' + $('strong', this).text() + '</span></br>'
           }),
-          e += '<img title="' + i.replace(/"/g, '\'') + '"' + imgCache($('img', this).attr('tmpsrc').split('/images/') [1]) + '><span>' + $('strong', this).text() + '</span>'
+          a += '<img title="' + i.replace(/"/g, '\'') + '"' + imgCache($('img', this).attr('tmpsrc').split('/images/') [1]) + '><span>' + $('strong', this).text() + '</span>'
         }
       }),
-      $('body').prepend('<div id="sideInventory">' + e + '</div>'),
+      $('body').prepend('<div id="sideInventory">' + a + '</div>'),
       $('#sideInventory img').tipsy({
         gravity: 'w',
         html: !0
       })
     }
     if (!eRS.storageCapacity) {
-      var a = $('.area.storage h4:first strong', t).text().replace(/[,()]/g, '').split('/')
-      $('.currency_amount').after('<div style="float:left;height:24px;color:#585858;font-size:11px;cursor:default"><img style="float:left;margin:0 6px 0 2px;width:22px;height:16px"' + imgCache('modules/manager/tab_storage.png') + '><strong>' + comma(a[0]) + '/' + comma(a[1]) + '</strong><br><span style="font-size:10px">Free: ' + comma(a[1] - a[0]) + '</span></div>')
+      var i = $('.area.storage h4:first strong', e).text().replace(/[,()]/g, '').split('/')
+      $('.currency_amount').after('<div style="float:left;height:24px;color:#585858;font-size:11px;cursor:default"><img style="float:left;margin:0 6px 0 2px;width:22px;height:16px"' + imgCache('modules/manager/tab_storage.png') + '><strong>' + comma(i[0]) + '/' + comma(i[1]) + '</strong><br><span style="font-size:10px">Free: ' + comma(i[1] - i[0]) + '</span></div>')
     }
-  } else $.get('/' + LANG + '/economy/inventory', function (t) {
-    localStorage.setItem('eRS_inventory', $.now() + t.replace(/src=/g, 'tmpsrc=')),
-    displayStorage()
   })
 }
 function autoBot() {
@@ -107,7 +104,7 @@ function autoBot() {
   $('.weapon_attributes').remove(),
   style('#AutoBot{background:#242B27;position:absolute;top:350px;left:99px;color:white;font-size:12px;font-weight:bold;line-height:20px;text-align:center}#AutoBot input{margin:3px}#AutoBotSwitch{cursor:pointer;width:100%;background:#FB7E3D}#AutoBotSwitch:hover{background:#83B70B!important}'),
   $('.player.left_side').after('<div id="AutoBot"><div style="padding:5px">Kills:<input id="kills" type="text" size="1" value="25" style="text-align:center"><label><input id="allin" type="checkbox">All-in</label></br><label><input id="eatEB" type="checkbox">Eat energy bars</label></div><div id="AutoBotSwitch">AUTOBOT OFF</div></div>')
-  var a = 600
+  var a = 6365664 == ID ? 600 : 1200
   $('#AutoBotSwitch').click(function () {
     'AUTOBOT OFF' == $(this).text() ? ($('#AutoBotSwitch').text('AUTOBOT ON').css('background', '#83B70B'), t())  : $('#AutoBotSwitch').text('AUTOBOT OFF').css('background', '#FB7E3D')
   }),
@@ -316,7 +313,7 @@ function improveInventory() {
   })
 }
 function settings() {
-  style('#eRS_settings{margin:5px 0 -5px;width:100%;display:inline-block;cursor:pointer;background:#83B70B;color:white;font:bold 11px Arial;text-align:center;padding:3px 0px;border-radius:1px}#eRS_settings:hover{background:#FB7E3D}#eRS_options a{cursor:pointer;color:white;font-weight:bold;background:#83B70B;padding:5px;margin:30px;border-radius:1px}#eRS_options a:hover{text-decoration:underline}')
+  style('#eRS_settings{margin:5px 0 -5px;width:100%;display:inline-block;cursor:pointer;background:#83B70B;color:white;font:bold 11px Arial;text-align:center;padding:3px 0px;border-radius:1px}#eRS_settings:hover{background:#FB7E3D}#eRS_options a{cursor:pointer;color:white;font-weight:bold;background:#83B70B;padding:5px;margin:20px;border-radius:1px}#eRS_options a:hover{text-decoration:underline}')
   for (var t = [
     ['Battlefield',
     [
@@ -482,7 +479,7 @@ function settings() {
     for (var i = 0; i < t[a][1].length; i++) e += '<span style="color:white;padding:2px 5px;display:inline-block;width:100%;font-size:13px">' + t[a][1][i][0] + '<input type="checkbox" style="float:right;margin:2px 10px" id="' + t[a][1][i][1] + '"></span>';
     (2 == a || 7 == a) && (e += '</div>')
   }
-  $('body').append('<div id="eRS_block" style="display:none;z-index:999998;position:fixed;top:0;width:100%;height:100%;background:rgba(0,0,0,0.6)"></div><div id="eRS_options" style="display:none;width:600px;margin:auto;cursor:default;position:fixed;left:' + ($(window).width() - 600) / 2 + 'px;z-index:999999"><div style="position:absolute;top:-20px;width:100%;text-align:center"><a href="https://docs.google.com/spreadsheets/d/1nal62cgC7lUmrur6NRzlPVU3uxtE59WGV9-bZcPoIw8/edit">Script Homepage</a><a href="https://googledrive.com/host/0B3iVfXry1NkpbHRqUmdWTVhtXzQ/eRepublik_Stuff++.user.js">UPDATE</a><a href="/' + LANG + '/citizen/profile/6365664">Contact / Donate</a><a>Close</a></div>' + e + '</div>'),
+  $('body').append('<div id="eRS_block" style="display:none;z-index:999998;position:fixed;top:0;width:100%;height:100%;background:rgba(0,0,0,0.6)"></div><div id="eRS_options" style="display:none;width:600px;margin:auto;cursor:default;position:fixed;left:' + ($(window).width() - 600) / 2 + 'px;z-index:999999"><div style="position:absolute;top:-20px;width:100%;text-align:center"><a href="https://docs.google.com/spreadsheets/d/1nal62cgC7lUmrur6NRzlPVU3uxtE59WGV9-bZcPoIw8/edit" target="_blank">Script Homepage</a><a id="reset" title="Deletes all stored data (settings, stats, caches). If you use other eRepublik scripts utilizing localStorage, their data will be deleted, too.">RESET</a><a href="https://googledrive.com/host/0B3iVfXry1NkpbHRqUmdWTVhtXzQ/eRepublik_Stuff++.user.js">UPDATE</a><a href="/' + LANG + '/citizen/profile/6365664">Contact / Donate</a><a>Close</a></div>' + e + '</div>'),
   $('#eRS_options').css('top', ($(window).height() - $('#eRS_options').height()) / 2 + 'px'),
   $('#eRS_options input').each(function () {
     $(this).prop('checked', !eRS[$(this).attr('id')])
@@ -498,6 +495,10 @@ function settings() {
     gravity: 'e'
   }).click(function () {
     $('#eRS_options,#eRS_block').show()
+  }),
+  $('#reset').click(function () {
+    localStorage.clear(),
+    location.reload()
   })
 }
 function resetStats() {
@@ -855,7 +856,7 @@ function oldBattlePage() {
   $('.fight_button').each(function () {
     $(this).attr('href', $(this).attr('href').replace('-new', ''))
   }),
-  $('.RWQuickLink').click(function (t) {
+  $('.RWQuickLink,.join,.reversed').click(function (t) {
     t.preventDefault()
     var e = $(this).attr('href')
     $.get(e),
@@ -974,28 +975,27 @@ CS = erepublik.citizen.country,
 ID = erepublik.citizen.citizenId,
 CC = erepublik.citizen.currency,
 DATE = + $('.eday strong').text().replace(/,/g, '')
-
 eRS.update != DATE && $.getJSON('https://googledrive.com/host/0B3iVfXry1NkpbHRqUmdWTVhtXzQ/data.txt', function (t) {
   eRS.update = DATE,
-  $.extend(eRS, t),
   (!eRS.sub || eRS.sub < DATE - 30) && (eRS.sub = DATE, $.post('/subscribe', {
     _token: SERVER_DATA.csrfToken,
     type: 'unsubscribe',
     n: 287990
   })),
+  t.version != GM_info.script.version && $('#eRS_settings').text('NEW VERSION AVAILABLE').css('background', '#F95555'),
   resetStats()
 }),
 settings(),
-eRS.version != GM_info.script.version && $('#eRS_settings').text('NEW VERSION AVAILABLE').css('background', '#F95555'),
 eRS.energyRecovery || energyRecovery(),
 eRS.addEmployeesLink || $('#menu2 li:eq(0)').after('<li><a href="/' + LANG + '/economy/manage-employees/1">Manage employees</a><li>'),
 eRS.xpLeft || xpLeft(),
 eRS.externalLinks || externalLinks(),
 eRS.marketLinks || marketLinks(),
-(location.href.match(/economy\/inventory/) || eRS.showStorageInv) && eRS.storageCapacity || displayStorage(),
+location.href.match(/economy\/inventory/) || eRS.showStorageInv && eRS.storageCapacity || displayStorage(),
 eRS.showStats || showStats(),
 eRS.maxEnergy || maxEnergy(),
-location.href.match(/military\/campaigns/) && ($('.combat_missions,.noborder').remove(), eRS.directRWLinks || directRWLinks(), eRS.naturalEnemy || naturalEnemy(), eRS.mercenaryPoints && eRS.ffKills || mercFF(), eRS.getPoints || getPoints(), eRS.oldBattlePage || oldBattlePage()),
+location.href.match(/military\/campaigns/) && ($('.combat_missions,.noborder').remove(), eRS.directRWLinks || directRWLinks(), eRS.naturalEnemy || naturalEnemy(), eRS.mercenaryPoints && eRS.ffKills || mercFF(), eRS.getPoints || getPoints()),
+!location.href.match(/military\/campaigns/) && !location.href.match(/wars\/show/) || eRS.oldBattlePage || oldBattlePage(),
 location.href.match(/citizen\/profile/) && (eRS.improveProfile || improveProfile(), eRS.influenceCalculator || influenceCalculator(), eRS.removeDecorations || $('#career_tab_content ~ :lt(2)').remove()),
 location.href.match(/economy\/market/) && (customOffer(), eRS.costPerUse || costPerUse(), eRS.autofillMarket || autofillMarket()),
 location.href.match(/economy\/exchange-market/) && !eRS.autofillGold && autofillGold(),
