@@ -104,7 +104,7 @@ function autoBot() {
   $('.weapon_attributes').remove(),
   style('#AutoBot{background:#242B27;position:absolute;top:350px;left:99px;color:white;font-size:12px;font-weight:bold;line-height:20px;text-align:center}#AutoBot input{margin:3px}#AutoBotSwitch{cursor:pointer;width:100%;background:#FB7E3D}#AutoBotSwitch:hover{background:#83B70B!important}'),
   $('.player.left_side').after('<div id="AutoBot"><div style="padding:5px">Kills:<input id="kills" type="text" size="1" value="25" style="text-align:center"><label><input id="allin" type="checkbox">All-in</label></br><label><input id="eatEB" type="checkbox">Eat energy bars</label></div><div id="AutoBotSwitch">AUTOBOT OFF</div></div>')
-  var a = 6365664 == ID ? 600 : 1200
+  var a = 600
   $('#AutoBotSwitch').click(function () {
     'AUTOBOT OFF' == $(this).text() ? ($('#AutoBotSwitch').text('AUTOBOT ON').css('background', '#83B70B'), t())  : $('#AutoBotSwitch').text('AUTOBOT OFF').css('background', '#FB7E3D')
   }),
