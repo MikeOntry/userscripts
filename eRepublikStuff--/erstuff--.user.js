@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		eRepublik Stuff--
-// @version		2.5.9
+// @version		2.5.16
 // @include		*www.erepublik.com/*
 // ==/UserScript==
 
@@ -25,25 +25,25 @@ function showStats() {
 function truePatriot() {
   $('.left_side a img').attr('src').split('/L/') [1].split('.') [0] == CScountry && $.get('/' + LANG + '/citizen/profile/' + ID, function (t) {
     var e = $('.citizen_military:eq(2)', t.replace(/src=/g, 'tmpsrc=')),
-    a = Math.max( + $('.mids', e).css('width').split('%') [0], 0.01),
-    i = $('strong:last', e).text().replace(/,/g, '').split('/')
-    TP.current = + i[0],
-    TP.next = + i[1],
-    TP.done = (TP.next - TP.current) / (100 - a) * a,
+    i = Math.max( + $('.mids', e).css('width').split('%') [0], 0.01),
+    a = $('strong:last', e).text().replace(/,/g, '').split('/')
+    TP.current = + a[0],
+    TP.next = + a[1],
+    TP.done = (TP.next - TP.current) / (100 - i) * i,
     $('#total_damage').css('bottom', '40px'),
-    $('#player_rank').css('bottom', '140px').after('<div id="player_rank" style="bottom:96px"><div class="rank_icon" title="TP Medal"><img alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAA6lBMVEUAAADk4dLu6c3Fv6bOybTV0cHQzLa7tqLZ18kXFgrv69e9t5zEv6mlnHi9tpqpn3TGvIft58rd17eDe2OMhWdnXjvZ0J67sH7s5cDdz479+OHIr0KAdD6Nfjvz67zHsEv48ciahzikl12RiF24qWPHuXrOu2jTx47BsGTey3fm039PRBdTSSWdj0qvn1THvIzaxFru35bQwXtya0uon3Pu5bF9bSPr6NLbzoy6pESrpY3FvZubkmlcThP57aPp0mn999ne161kWB+wmz/n4LtwZTbYz57Qyann145iWTGGfVb8+eg8Mwq4sIAJoGshAAAAHHRSTlMAC0g3FSpUBCABNWtDkINknFZsjjoljXV2yI6IGCSKSQAAAglJREFUOMutk+e6ojAQhhHBBOwe29kNvVdBBcHe+7n/21nWs4oL+3MnP5In35vMTGaC/W9ravRzCUgS5PTCD6X23IVlksoBpZmIOn/0bhXkPdSu6PIAKNhAFSxvlaP0AR6+GoL9AiB8AcXx3W4nM/Epy3b9uduatr8XdEMejCx7BEF3qM2sj9exwbxKAIxqmvKAXakMc6kiOZhbvTS56lgqg6KpDm6srwguuiMtYBg8jY04mqfap+mc1vzEDQ/yRYyCcEi/dNA0plNxOURH9jbjYsvdSoHGRJUUKOL1kazq4tBnZc6zGHvKu+Nh5a83VkLBMTcznYtXobiVeEdTi+8AUZYc5HqDgRp7Es84Z8l3v4EUqX05u9Vyw3GnpTCMxz4Ds4WSBM6LFXEcCdOzM1uhHPClGd4OXVEoQUPYc4csAPcTk3ORuLVJytB57kBmAHzCrnb3uR+OClhLW+vbetbFyfe4xYjd2WRy21pfVDNZKBrvCeX5xF/gGJzw+kLJ6Gp/bTBkY7+5kL8B1RIhleqFrlEp8boIyWhz6GDknje2qPSmt9QehQexSGPdKMkPbtgzs1BeBFWKegCjeZWhscYyacuCxp71WpNOy1kGSZ43Q2gDeT23AGixxzJBpTFQgEoAlkNkQVleRwAjSkT+18BgNyawvikknf9vw3/WOwDv19v5w6mvx3i3X7WuRBV1yWtgAAAAAElFTkSuQmCC" style="width:32px;height:32px"></div><div class="rank_holder"><strong id="rank_max2"><span id="rank_min2">' + comma(TP.current) + ' TP points</span> </strong><div style="width:' + a + '%" class="rank_bar" id="rank_status_gained2"></div></div>')
+    $('#player_rank').css('bottom', '140px').after('<div id="player_rank" style="bottom:96px"><div class="rank_icon" title="TP Medal"><img alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAA6lBMVEUAAADk4dLu6c3Fv6bOybTV0cHQzLa7tqLZ18kXFgrv69e9t5zEv6mlnHi9tpqpn3TGvIft58rd17eDe2OMhWdnXjvZ0J67sH7s5cDdz479+OHIr0KAdD6Nfjvz67zHsEv48ciahzikl12RiF24qWPHuXrOu2jTx47BsGTey3fm039PRBdTSSWdj0qvn1THvIzaxFru35bQwXtya0uon3Pu5bF9bSPr6NLbzoy6pESrpY3FvZubkmlcThP57aPp0mn999ne161kWB+wmz/n4LtwZTbYz57Qyann145iWTGGfVb8+eg8Mwq4sIAJoGshAAAAHHRSTlMAC0g3FSpUBCABNWtDkINknFZsjjoljXV2yI6IGCSKSQAAAglJREFUOMutk+e6ojAQhhHBBOwe29kNvVdBBcHe+7n/21nWs4oL+3MnP5In35vMTGaC/W9ravRzCUgS5PTCD6X23IVlksoBpZmIOn/0bhXkPdSu6PIAKNhAFSxvlaP0AR6+GoL9AiB8AcXx3W4nM/Epy3b9uduatr8XdEMejCx7BEF3qM2sj9exwbxKAIxqmvKAXakMc6kiOZhbvTS56lgqg6KpDm6srwguuiMtYBg8jY04mqfap+mc1vzEDQ/yRYyCcEi/dNA0plNxOURH9jbjYsvdSoHGRJUUKOL1kazq4tBnZc6zGHvKu+Nh5a83VkLBMTcznYtXobiVeEdTi+8AUZYc5HqDgRp7Es84Z8l3v4EUqX05u9Vyw3GnpTCMxz4Ds4WSBM6LFXEcCdOzM1uhHPClGd4OXVEoQUPYc4csAPcTk3ORuLVJytB57kBmAHzCrnb3uR+OClhLW+vbetbFyfe4xYjd2WRy21pfVDNZKBrvCeX5xF/gGJzw+kLJ6Gp/bTBkY7+5kL8B1RIhleqFrlEp8boIyWhz6GDknje2qPSmt9QehQexSGPdKMkPbtgzs1BeBFWKegCjeZWhscYyacuCxp71WpNOy1kGSZ43Q2gDeT23AGixxzJBpTFQgEoAlkNkQVleRwAjSkT+18BgNyawvikknf9vw3/WOwDv19v5w6mvx3i3X7WuRBV1yWtgAAAAAElFTkSuQmCC" style="width:32px;height:32px"></div><div class="rank_holder"><strong id="rank_max2"><span id="rank_min2">' + comma(TP.current) + ' TP points</span> </strong><div style="width:' + i + '%" class="rank_bar" id="rank_status_gained2"></div></div>')
   })
 }
 function naturalEnemy() {
   var t = '<img alt="" title="Natural enemy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAYFBMVEUAAAAAAAAAAAC4AAAAAAAAAAAAAAAEAAAAAAAAAAAiAACYAABSAACQAAC6AADJAADQFxf////79/jDAAD56+y+AAD78PHVMjPODQ3SJyjur7HQICDxwMLolZbwubnrpKa66gNgAAAAD3RSTlMVEBnvHgIGMQwmO5JQiPeWuYyFAAAAhklEQVQY02VPSQ6DMAycBAdjNhPCUqDL/39Zq2oOKD5YmpFmQwh14+CJPFxThwDDIGE7IRgDw8JDlVLVtWIMDPej6jSprr0YdMSjHueyvXddW3KADHoscZ7jtmsngOdKz/i5rld86soexOmxzObw+0x3IhmRJdNfUpjm2C3HFsWK6sW4Yv4XCT4LXK2gv4wAAAAASUVORK5CYII=" style="'
   !$('.side_flags[src$="/' + CScountry + '.png"]').length && SERVER_DATA.invaderId != CS && SERVER_DATA.defenderId != CS || SERVER_DATA.isResistance || $.get('/' + LANG + '/country/military/' + CScountry, function (e) {
-    var a = e.replace(/src=/g, 'tmpsrc=')
-    if ($('.indent:eq(0) .attacker img', a).length) {
-      var i = $('.indent:eq(0) .flagholder img', a).attr('tmpsrc').split('/L/') [1].split('.') [0]
+    var i = e.replace(/src=/g, 'tmpsrc=')
+    if ($('.indent:eq(0) .attacker img', i).length) {
+      var a = $('.indent:eq(0) .flagholder img', i).attr('tmpsrc').split('/L/') [1].split('.') [0]
       $('#battle_listing li').each(function () {
-        !$('.resistance_sign', this).length && $('.side_flags[src$="/' + CScountry + '.png"]', this).length && $('.side_flags[src$="/' + i + '.png"]', this).after(t + 'margin:8px -20px 0 -10px;z-index:5">')
+        !$('.resistance_sign', this).length && $('.side_flags[src$="/' + CScountry + '.png"]', this).length && $('.side_flags[src$="/' + a + '.png"]', this).after(t + 'margin:8px -20px 0 -10px;z-index:5">')
       }),
-      $('.country a img[src$="/' + i + '.png"]').after(t + 'position:absolute;margin:-2px 0 0 -10px">')
+      $('.country a img[src$="/' + a + '.png"]').after(t + 'position:absolute;margin:-2px 0 0 -10px">')
     }
   })
 }
@@ -57,27 +57,27 @@ function displayStorage() {
     var e = t.replace(/src=/g, 'tmpsrc=')
     if (!eRS.showStorageInv) {
       style('#sideInventory{position:absolute;background:#FFF}#sideInventory img,#sideInventory span{float:left;clear:both}#sideInventory img{width:39px;height:39px;background:linear-gradient(#EEF1EC,#D5DECF)}#sideInventory span{font:bold 10px arial;color:#578B4D;background:linear-gradient(#BEE698,#98D780);width:39px;text-align:center;cursor:default}.col{line-height:19px}')
-      var a = ''
+      var i = ''
       $('.item_mask ul li,.bazooka .item', e).each(function () {
         if (0 !== + $('strong', this).text()) {
           var t = $('strong', this).attr('id') ? $('strong', this).attr('id').split('stock_') [1] : '',
-          i = $('#product_details_' + t + ' .attributes', e).html() || ''
-          i += $('#product_details_' + t + ' .extra', e).html() || '',
+          a = $('#product_details_' + t + ' .attributes', e).html() || ''
+          a += $('#product_details_' + t + ' .extra', e).html() || '',
           $(this).parent().hasClass('bazooka') && $('.b_parts li', e).each(function () {
-            i += $(this).attr('title') + ': <span class="col defense">' + $('strong', this).text() + '</span></br>'
+            a += $(this).attr('title') + ': <span class="col defense">' + $('strong', this).text() + '</span></br>'
           }),
-          a += '<img title="' + i.replace(/"/g, '\'') + '"' + imgCache($('img', this).attr('tmpsrc').split('/images/') [1]) + '><span>' + $('strong', this).text() + '</span>'
+          i += '<img title="' + a.replace(/"/g, '\'') + '"' + imgCache($('img', this).attr('tmpsrc').split('/images/') [1]) + '><span>' + ($('.timer', this).length ? parseInt($('.timer', this).attr('data-duration') / 3600) + 'h' : $('strong', this).text()) + '</span>'
         }
       }),
-      $('body').prepend('<div id="sideInventory">' + a + '</div>'),
+      $('body').prepend('<div id="sideInventory">' + i + '</div>'),
       $('#sideInventory img').tipsy({
         gravity: 'w',
         html: !0
       })
     }
     if (!eRS.storageCapacity) {
-      var i = $('.area.storage h4:first strong', e).text().replace(/[,()]/g, '').split('/')
-      $('.currency_amount').after('<div style="float:left;height:24px;color:#585858;font-size:11px;cursor:default"><img style="float:left;margin:0 6px 0 2px;width:22px;height:16px"' + imgCache('modules/manager/tab_storage.png') + '><strong>' + comma(i[0]) + '/' + comma(i[1]) + '</strong><br><span style="font-size:10px">Free: ' + comma(i[1] - i[0]) + '</span></div>')
+      var a = $('.area.storage h4:first strong', e).text().replace(/[,()]/g, '').split('/')
+      $('.currency_amount').after('<div style="float:left;height:24px;color:#585858;font-size:11px;cursor:default"><img style="float:left;margin:0 6px 0 2px;width:22px;height:16px"' + imgCache('modules/manager/tab_storage.png') + '><strong>' + comma(a[0]) + '/' + comma(a[1]) + '</strong><br><span style="font-size:10px">Free: ' + comma(a[1] - a[0]) + '</span></div>')
     }
   })
 }
@@ -87,24 +87,24 @@ function autoBot() {
       sideId: SERVER_DATA.countryId,
       battleId: SERVER_DATA.battleId,
       _token: SERVER_DATA.csrfToken
-    }, function (a) {
-      return a.error && (('UNKNOWN_SIDE' == a.message || 'WRONG_SIDE' == a.message) && (location.href = a.url), 'SHOOT_LOCKOUT' == a.message) ? t()  : ($('#allin').is(':checked') || $('#kills').val($('#kills').val() - 1), $('#experienceTooltip strong').eq(1).text( + $('#experienceTooltip strong').eq(1).text() + a.user.earnedXp), $('#total_damage strong').text(comma(Math.floor( + $('#total_damage strong').text().replace(/,/g, '') + (a.oldEnemy.isNatural ? 1.1 * a.user.givenDamage : a.user.givenDamage)))), $('#rank_min span').text(comma(a.rank.points)), $('#rank_status_gained').css('width', a.rank.percentage + '%'), $('#player_life').css('width', a.details.current_energy_ratio + '%'), $('#possible_life').css('width', a.details.remaining_energy_ratio + '%'), $('#weapon_inventory p').text(a.user.weaponQuantity), $('#enemy_name').text(a.enemy.name), $('#enemy_skill').text(a.enemy.skill), $('#enemy_life').css('width', a.enemy.energyRatio + '%'), $('#side_bar_currency_account_value').text(comma(a.details.currency)), e(a.details.wellness), energy.processResponse(a.user), void (smallestFood = {
+    }, function (i) {
+      return i.error && (('UNKNOWN_SIDE' == i.message || 'WRONG_SIDE' == i.message) && (location.href = i.url), 'SHOOT_LOCKOUT' == i.message) ? t()  : ($('#allin').is(':checked') || $('#kills').val($('#kills').val() - 1), $('#experienceTooltip strong').eq(1).text( + $('#experienceTooltip strong').eq(1).text() + i.user.earnedXp), $('#total_damage strong').text(comma(Math.floor( + $('#total_damage strong').text().replace(/,/g, '') + (i.oldEnemy.isNatural ? 1.1 * i.user.givenDamage : i.user.givenDamage)))), $('#rank_min span').text(comma(i.rank.points)), $('#rank_status_gained').css('width', i.rank.percentage + '%'), $('#player_life').css('width', i.details.current_energy_ratio + '%'), $('#possible_life').css('width', i.details.remaining_energy_ratio + '%'), $('#weapon_inventory p').text(i.user.weaponQuantity), $('#enemy_name').text(i.enemy.name), $('#enemy_skill').text(i.enemy.skill), $('#enemy_life').css('width', i.enemy.energyRatio + '%'), $('#side_bar_currency_account_value').text(comma(i.details.currency)), e(i.details.wellness), energy.processResponse(i.user), void (smallestFood = {
         use: 2
       }))
     })  : void 0
   }
   function e(e) {
-    return !eRS.lvlUpNoRecovery && globalNS.userInfo.wellness + food_remaining >= 10 * ($('#experienceTooltip strong').eq(2).text() - $('#experienceTooltip strong').eq(1).text()) ? setTimeout(t, a)  : !$('#eatEB').is(':checked') && !food_remaining || e >= 100 ? setTimeout(t, a)  : void setTimeout(function () {
+    return !eRS.lvlUpNoRecovery && globalNS.userInfo.wellness + food_remaining >= 10 * ($('#experienceTooltip strong').eq(2).text() - $('#experienceTooltip strong').eq(1).text()) ? setTimeout(t, i)  : !$('#eatEB').is(':checked') && !food_remaining || e >= 100 ? setTimeout(t, i)  : void setTimeout(function () {
       $.getJSON('/' + LANG + '/main/eat?format=json&_token=' + SERVER_DATA.csrfToken + '&buttonColor=' + ($('#eatEB').is(':checked') ? 'orange' : 'blue'), function (e) {
         t(),
         energy.processResponse(e)
       })
-    }, a)
+    }, i)
   }
   $('.weapon_attributes').remove(),
   style('#AutoBot{background:#242B27;position:absolute;top:350px;left:99px;color:white;font-size:12px;font-weight:bold;line-height:20px;text-align:center}#AutoBot input{margin:3px}#AutoBotSwitch{cursor:pointer;width:100%;background:#FB7E3D}#AutoBotSwitch:hover{background:#83B70B!important}'),
   $('.player.left_side').after('<div id="AutoBot"><div style="padding:5px">Kills:<input id="kills" type="text" size="1" value="25" style="text-align:center"><label><input id="allin" type="checkbox">All-in</label></br><label><input id="eatEB" type="checkbox">Eat energy bars</label></div><div id="AutoBotSwitch">AUTOBOT OFF</div></div>')
-  var a = 600
+  var i = 600;
   $('#AutoBotSwitch').click(function () {
     'AUTOBOT OFF' == $(this).text() ? ($('#AutoBotSwitch').text('AUTOBOT ON').css('background', '#83B70B'), t())  : $('#AutoBotSwitch').text('AUTOBOT OFF').css('background', '#FB7E3D')
   }),
@@ -120,11 +120,11 @@ function energyRecovery() {
 }
 function marketLinks() {
   style('.eRS_quickMarket{display:none;position:relative;top:-62px}.eRS_quickMarket img{width:18px;height:20px;vertical-align:middle;margin-bottom:2px}')
-  for (var t = '', e = '', a = '', i = '', n = '<li><a href="/' + LANG + '/economy/market/' + CS, o = '<div class="eRS_quickMarket"><ul>', r = 1; 4 >= r; r++) for (var s = 1; 8 >= s; s++) 1 == r && (t += 8 > s ? n + '/1/' + s + '"><img' + imgCache('icons/industry/' + r + '/q' + s + '.png') + '> Food Q' + s + '</li>' : n + '/7/1"><img' + imgCache('icons/industry/7/default.png') + '> Food Raw</li>'),
+  for (var t = '', e = '', i = '', a = '', n = '<li><a href="/' + LANG + '/economy/market/' + CS, o = '<div class="eRS_quickMarket"><ul>', r = 1; 4 >= r; r++) for (var s = 1; 8 >= s; s++) 1 == r && (t += 8 > s ? n + '/1/' + s + '"><img' + imgCache('icons/industry/' + r + '/q' + s + '.png') + '> Food Q' + s + '</li>' : n + '/7/1"><img' + imgCache('icons/industry/7/default.png') + '> Food Raw</li>'),
   2 == r && (e += 8 > s ? n + '/2/' + s + '"><img' + imgCache('icons/industry/' + r + '/q' + s + '.png') + '> Weapon Q' + s + '</li>' : n + '/12/1"><img' + imgCache('icons/industry/12/default.png') + '> Weapon Raw</li>'),
-  3 == r && 5 >= s && (a += n + '/3/' + s + '"><img' + imgCache('icons/industry/' + r + '/q' + s + '.png') + '> Ticket Q' + s + '</li>'),
-  4 == r && (i += 8 > s ? n + '/4/' + s + '"><img' + imgCache('icons/industry/' + r + '/q' + s + '.png') + '> House Q' + s + '</li>' : n + '/17/1"><img' + imgCache('icons/industry/17/default.png') + '> House Raw</li>')
-  $('#menu4 ul li:eq(0)').append(o + t + '</ul></div>' + o + e + '</ul></div>' + o + a + '</ul></div>' + o + i + '</ul></div>').hover(function () {
+  3 == r && 5 >= s && (i += n + '/3/' + s + '"><img' + imgCache('icons/industry/' + r + '/q' + s + '.png') + '> Ticket Q' + s + '</li>'),
+  4 == r && (a += 8 > s ? n + '/4/' + s + '"><img' + imgCache('icons/industry/' + r + '/q' + s + '.png') + '> House Q' + s + '</li>' : n + '/17/1"><img' + imgCache('icons/industry/17/default.png') + '> House Raw</li>')
+  $('#menu4 ul li:eq(0)').append(o + t + '</ul></div>' + o + e + '</ul></div>' + o + i + '</ul></div>' + o + a + '</ul></div>').hover(function () {
     $('.eRS_quickMarket:eq(0)').css('right', '401px'),
     $('.eRS_quickMarket:eq(1)').css('right', '264px'),
     $('.eRS_quickMarket:eq(3)').css('left', '138px'),
@@ -134,16 +134,16 @@ function marketLinks() {
   })
 }
 function lowerSalary() {
-  function t(a) {
-    a < e.length && $.post(update_salary_url, e[a], function (i) {
-      var n = $('#old_salary_' + e[a].employeeId).parent().parent()
-      i.status ? ($('#old_salary_' + e[a].employeeId + ',#salary_value_' + e[a].employeeId).val(i.result.salary), $('#current_salary_' + e[a].employeeId).html(i.result.salary + ' ' + CC), n.append('<div class="notice_holder"><strong>' + i.result.message + '</strong></div>'), setTimeout(function () {
+  function t(i) {
+    i < e.length && $.post(update_salary_url, e[i], function (a) {
+      var n = $('#old_salary_' + e[i].employeeId).parent().parent()
+      a.status ? ($('#old_salary_' + e[i].employeeId + ',#salary_value_' + e[i].employeeId).val(a.result.salary), $('#current_salary_' + e[i].employeeId).html(a.result.salary + ' ' + CC), n.append('<div class="notice_holder"><strong>' + a.result.message + '</strong></div>'), setTimeout(function () {
         $('.notice_holder', n).remove()
-      }, 4000), setTimeout(recalculateDues, 50))  : n.append('<div class="error_holder"><strong>' + i.message + '</strong><a href="javascript:;"></a></div>').click(function () {
+      }, 4000), setTimeout(recalculateDues, 50))  : n.append('<div class="error_holder"><strong>' + a.message + '</strong><a href="javascript:;"></a></div>').click(function () {
         $('.error_holder', n).remove()
       }),
       setTimeout(function () {
-        t(a + 1)
+        t(i + 1)
       }, 3000)
     }, 'json')
   }
@@ -151,16 +151,16 @@ function lowerSalary() {
   $('.area h4').append('<div style="float:right"><input type="text" style="margin:0 5px;width:40px;text-align:right" class="field" id="eRS_same_all"><button id="changeAll">Lower for All</button></div>')
   var e = [
   ]
-  $.get('/' + LANG + '/economy/job-market/' + CS, function (a) {
-    $('#eRS_same_all,#job_salary_value').val(parseFloat($('strong,sup', $('.jm_salary:eq(1)', a.replace(/src=/g, 'tmpsrc='))).text())),
+  $.get('/' + LANG + '/economy/job-market/' + CS, function (i) {
+    $('#eRS_same_all,#job_salary_value').val(parseFloat($('strong,sup', $('.jm_salary:eq(1)', i.replace(/src=/g, 'tmpsrc='))).text())),
     $('#changeAll').click(function () {
       $('.list_group .employee_salary.c3').each(function () {
         var t = $('.old_salary_value', this).attr('id').split('_') [2],
-        a = $('#eRS_same_all').val()
-        a < $('#old_salary_' + t, this).val() && e.push({
+        i = $('#eRS_same_all').val()
+        i < $('#old_salary_' + t, this).val() && e.push({
           action_type: 'update_salary',
           employeeId: t,
-          salary: a,
+          salary: i,
           _token: $('#_token').val()
         })
       }),
@@ -191,16 +191,16 @@ function costPerUse() {
   var t = location.href.split('/')
   if (!(t[7] > 4 || - 1 != t[8].indexOf('?'))) {
     var e = $('.solid.durability strong:eq(0)').text(),
-    a = 'HP'
+    i = 'HP'
     1 == t[7] && (e = 7 != t[8] ? 2 * t[8] : 20),
-    2 == t[7] && (a = 'Use'),
-    3 == t[7] && (a = 'Zone', e = t[8]),
+    2 == t[7] && (i = 'Use'),
+    3 == t[7] && (i = 'Zone', e = t[8]),
     4 == t[7] && (e = $('.solid.health').text()),
-    $('#marketplace thead .m_provider').after('<th style="width:110px">Cost Per ' + a + '</th>'),
+    $('#marketplace thead .m_provider').after('<th style="width:110px">Cost Per ' + i + '</th>'),
     $('#marketplace .price_sorted tr').each(function () {
-      var t = $('.m_buy a', this).attr('data-price') / e
-      t = t.toFixed(0.1 >= t ? 4 : 2),
-      $('.m_provider', this).after('<td class="stprice"><strong>' + t.split('.') [0] + '</strong><sup>.' + t.split('.') [1] + '<strong> ' + CC + '/' + a + '</strong></sup></td>')
+      var t = parseFloat($('.m_price', this).text()) / e
+      t = t.toFixed(0.1 >= t ? 4 : 2).split('.'),
+      $('.m_provider', this).after('<td class="stprice"><strong>' + t[0] + '</strong><sup>.' + t[1] + '<strong> ' + CC + '/' + i + '</strong></sup></td>')
     })
   }
 }
@@ -208,12 +208,12 @@ function getItemPrice() {
   $('.sell_selector .industry_quality_selector').click(function () {
     var t = Math.max($(this).attr('quality'), 1),
     e = $(this).attr('industry'),
-    a = Math.min(itemAmounts[e][t] - (itemPartials[e] ? !!itemPartials[e][t] : 0), 99999)
-    $('#sell_amount').val(a)
-    var i = $('img', this).attr('src').split('/industry/') [1],
+    i = Math.min(itemAmounts[e][t] - (itemPartials[e] ? !!itemPartials[e][t] : 0), 99999)
+    $('#sell_amount').val(i)
+    var a = $('img', this).attr('src').split('/industry/') [1],
     n = 0
     $('tr[id^="offer_"]:visible .offer_image').each(function () {
-      $(this).attr('src').split('/industry/') [1] == i && (n = $(this).parent().parent().find('.offer_price strong').text().replace(/,/g, ''), setTimeout(function () {
+      $(this).attr('src').split('/industry/') [1] == a && (n = $(this).parent().parent().find('.offer_price strong').text().replace(/,/g, ''), setTimeout(function () {
         $('#sell_price').val(n)
       }, 0))
     }),
@@ -248,45 +248,22 @@ function autofillGold() {
 }
 function improveInventory() {
   function t() {
-    $('#Net_unit,#Total_net').remove(),
-    $('.offers_price').after('<th id="Net_unit"><strong>Net/unit</strong><b></b></th><th id="Total_net"><strong>Total Net Value</strong><b></b><span style="float:left;height:14px;clear:both;padding:8px 0px 8px 5px;color:#88AFC9;font-size:11px;font-weight:bold"></span></th>')
-    var t = img_country[$('#market_select img').attr('src').split('/M/') [1].split('.') [0]],
-    e = countryList[t].taxes[$('#sell_product').attr('src').split('/industry/') [1].split('/') [0]],
-    a = + e.value_added_tax
-    t != CS && (a += + e.import_tax)
-    var i = ( + $('#sell_price').val() || 0) / ((100 + a) / 100),
-    o = i * ( + $('#sell_amount').val() || 0)
-    $('#Net_unit b').text(comma(i.toFixed(2)) + ' ' + CC),
-    $('#Total_net b').text(comma(o.toFixed(2)) + ' ' + CC),
-    $('#Total_net span').text(comma((o / n).toFixed(2)) + ' GOLD')
-  }
-  function e() {
     $('tr[id^="offer_"]:visible').each(function () {
       $('.fluid_blue_dark_small,.Net_unit,.Total_net', this).remove()
       var t = img_country[$('.offer_flag', this).attr('src').split('/M/') [1].split('.') [0]],
       e = $('.offer_image', this).attr('src').split('/industry/') [1].split('/'),
       a = - 1 != e[1].split('_') [0].indexOf('q') ? e[1].split('_') [0].replace('q', '')  : 1,
-      i = countryList[t].taxes[e[0]],
-      o = + i.value_added_tax
-      t != CS && (o += + i.import_tax)
-      var r = $('.offer_price strong', this).text().replace(/,/g, '') / ((100 + o) / 100),
+      n = countryList[t].taxes[e[0]],
+      o = + n.value_added_tax + (t != CS ? + n.import_tax : 0),
+      r = $('.offer_price strong', this).text().replace(/,/g, '') / ((100 + o) / 100),
       s = r * $('.offer_amount', this).text().replace(/,/g, '')
-      $('.offer_price', this).after('<td class="Net_unit"><strong>' + comma(r.toFixed(2)) + '</strong> ' + CC + '</td><td class="Total_net"><strong>' + comma(s.toFixed(2)) + '</strong> ' + CC + '<br><strong style="text-align:right;font-size:11px">' + comma((s / n).toFixed(2)) + '</strong><span style="font-size:11px"> GOLD</span></td>'),
+      $('.offer_price', this).after('<td class="Net_unit"><strong>' + comma(r.toFixed(2)) + '</strong> ' + CC + '</td><td class="Total_net"><strong>' + comma(s.toFixed(2)) + '</strong> ' + CC + '<br><strong style="text-align:right;font-size:11px">' + comma((s / i).toFixed(2)) + '</strong><span style="font-size:11px"> GOLD</span></td>'),
       $('.delete_offer', this).after('<a title="Show offer on market" href="/' + LANG + '/economy/market/' + t + '/' + e[0] + '/' + a + '?sellerId=' + ID + '&sellerName=' + $('.user_identity').text() + '&offerId=' + $(this).attr('id').split('_') [1] + '&offerAmount=' + $('.offer_amount', this).text().replace(/,/g, '') + '&offerPrice=' + $('.offer_price strong', this).text().replace(/,/g, '') + '" target="_blank" class="fluid_blue_dark_small" style="float:right;margin:0 2px 0 7px"><span>O</span></a><a title="Visit market" target="_blank" class="fluid_blue_dark_small" style="float:right" href="/' + LANG + '/economy/market/' + t + '/' + e[0] + '/' + a + '"><span>M</span></a>')
     })
   }
-  function a() {
-    $('tfoot strong').text(0)
-    var t = 0
-    $('.Total_net:visible').each(function () {
-      t += + $('strong:eq(0)', this).text().replace(/,/g, '')
-    }),
-    $('tfoot strong:eq(0)').text(comma(t.toFixed(2))),
-    $('tfoot strong:eq(1)').text(comma((t / n).toFixed(2)))
-  }
-  style('td:last-child,#Net_unit,.Net_unit,#Total_net,.Total_net{padding-left:0!important}.Total_net{padding:15px;text-align:right}.delete_offer{opacity:1!important}')
-  var i = $('.area.storage h4:first strong').text().replace(/[,()]/g, '').split('/')
-  $('.area.storage h4:first strong').append(' Free space: ' + comma(i[1] - i[0])),
+  style('td:last-child,#Net_unit,.Net_unit,#Total_net,.Total_net,#Total_netF{padding-left:0!important}.Total_net,#Total_netF{padding:15px;text-align:right}.delete_offer{opacity:1!important}')
+  var e = $('.area.storage h4:first strong').text().replace(/[,()]/g, '').split('/')
+  $('.area.storage h4:first strong').append(' Free space: ' + comma(e[1] - e[0])),
   $('th input').css('width', '50px'),
   $('.offers_product').css('width', '70px'),
   $('.offers_price').css('width', '120px'),
@@ -294,22 +271,28 @@ function improveInventory() {
   $('.offers_market').css('width', '60px'),
   $('.offers_action').css('width', '132px'),
   $('.offers_action a').css('cssText', 'left:10px;margin-right:20px'),
-  $('#sell_offers table').append('<tfoot><tr style="background:#F7FCFF;height:44px"><td colspan="4"><td class="Total_net"><strong></strong> ' + CC + '<br><strong style="font-size:11px"></strong><font style="font-size:11px"> GOLD</font></td><td colspan="2"></td></tr></tfoot>')
-  var n
-  $.get('/' + LANG + '/economy/exchange-market/', function (a) {
-    n = a.split('data-price=\'') [1].split('\'') [0],
-    t(),
-    e()
+  $('#sell_offers table').append('<tfoot><tr style="background:#F7FCFF;height:44px"><td colspan="4"><td id="Total_netF"></td><td colspan="2"></td></tr></tfoot>')
+  var i
+  $.get('/' + LANG + '/economy/exchange-market/', function (e) {
+    i = e.split('data-price=\'') [1].split('\'') [0],
+    t()
   }),
   setInterval(function () {
-    a(),
-    t()
+    var t = 0
+    $('.Total_net:visible').each(function () {
+      t += + $('strong:eq(0)', this).text().replace(/,/g, '')
+    }),
+    $('#Total_netF').html('<strong>' + comma(t.toFixed(2)) + '</strong> ' + CC + '<br><strong style="font-size:11px">' + comma((t / i).toFixed(2)) + '</strong><font style="font-size:11px"> GOLD</font>'),
+    $('#Net_unit,#Total_net').remove()
+    var e = img_country[$('#market_select img').attr('src').split('/M/') [1].split('.') [0]],
+    a = countryList[e].taxes[$('#sell_product').attr('src').split('/industry/') [1].split('/') [0]],
+    n = + a.value_added_tax + (e != CS ? + a.import_tax : 0),
+    o = ( + $('#sell_price').val() || 0) / ((100 + n) / 100),
+    r = o * ( + $('#sell_amount').val() || 0)
+    $('.offers_price').after('<th id="Net_unit"><strong>Net/unit</strong><b>' + comma(o.toFixed(2)) + ' ' + CC + '</b></th><th id="Total_net"><strong>Total Net Value</strong><b>' + comma(r.toFixed(2)) + ' ' + CC + '</b><span style="float:left;height:14px;clear:both;padding:8px 0px 8px 5px;color:#88AFC9;font-size:11px;font-weight:bold">' + comma((r / i).toFixed(2)) + ' GOLD</span></th>')
   }, 100),
   $(document).ajaxSuccess(function () {
-    setTimeout(function () {
-      t(),
-      e()
-    }, 0)
+    setTimeout(t, 0)
   })
 }
 function settings() {
@@ -473,11 +456,11 @@ function settings() {
         ]
       ]
     ]
-  ], e = '', a = 0; a < t.length; a++) {
-    a && 3 != a || (e += '<div style="width:48%;margin:0.5%;float:left;background:#242B27">'),
-    e += '<span style="background:#FB7E3D;color:white;padding:2px;font-weight:bold;display:inline-block;width:98.7%;text-align:center">' + t[a][0] + '</span>'
-    for (var i = 0; i < t[a][1].length; i++) e += '<span style="color:white;padding:2px 5px;display:inline-block;width:100%;font-size:13px">' + t[a][1][i][0] + '<input type="checkbox" style="float:right;margin:2px 10px" id="' + t[a][1][i][1] + '"></span>';
-    (2 == a || 7 == a) && (e += '</div>')
+  ], e = '', i = 0; i < t.length; i++) {
+    i && 3 != i || (e += '<div style="width:48%;margin:0.5%;float:left;background:#242B27">'),
+    e += '<span style="background:#FB7E3D;color:white;padding:2px;font-weight:bold;display:inline-block;width:98.7%;text-align:center">' + t[i][0] + '</span>'
+    for (var a = 0; a < t[i][1].length; a++) e += '<span style="color:white;padding:2px 5px;display:inline-block;width:100%;font-size:13px">' + t[i][1][a][0] + '<input type="checkbox" style="float:right;margin:2px 10px" id="' + t[i][1][a][1] + '"></span>';
+    (2 == i || 7 == i) && (e += '</div>')
   }
   $('body').append('<div id="eRS_block" style="display:none;z-index:999998;position:fixed;top:0;width:100%;height:100%;background:rgba(0,0,0,0.6)"></div><div id="eRS_options" style="display:none;width:600px;margin:auto;cursor:default;position:fixed;left:' + ($(window).width() - 600) / 2 + 'px;z-index:999999"><div style="position:absolute;top:-20px;width:100%;text-align:center"><a href="https://docs.google.com/spreadsheets/d/1nal62cgC7lUmrur6NRzlPVU3uxtE59WGV9-bZcPoIw8/edit" target="_blank">Script Homepage</a><a id="reset" title="Deletes all stored data (settings, stats, caches). If you use other eRepublik scripts utilizing localStorage, their data will be deleted, too.">RESET</a><a href="https://googledrive.com/host/0B3iVfXry1NkpbHRqUmdWTVhtXzQ/eRepublik_Stuff++.user.js">UPDATE</a><a href="/' + LANG + '/citizen/profile/6365664">Contact / Donate</a><a>Close</a></div>' + e + '</div>'),
   $('#eRS_options').css('top', ($(window).height() - $('#eRS_options').height()) / 2 + 'px'),
@@ -513,8 +496,7 @@ function externalLinks() {
   function t() {
     $('a[href*="/main/warn/"]').each(function () {
       var t = $(this).text()
-      if (4 == location.href.split('/').length || t.match(/www\.|http:\/\/|https:\/\//)) t.match(/http:\/\/|https:\/\//) || (t = 'http://' + t),
-      $(this).attr('href', t) 
+      if (4 == location.href.split('/').length || t.match(/www\.|http:\/\/|https:\/\//)) $(this).attr('href', t.match(/http:\/\/|https:\/\//) ? t : 'http://' + t) 
       else {
         var e = $(this)
         $.get(e.attr('href'), function (t) {
@@ -546,12 +528,11 @@ function companyManager() {
     $('.listing.companies:not(.disabled) .area_pic > img[src="' + $('img', this).attr('src') + '"]:lt(' + Math.floor(globalNS.userInfo.wellness / 10) + ')').parent().parent().find('.owner_work:not(.active)').addClass('active'),
     $('.listing.companies:not(.disabled)').each(function (t, e) {
       applyCheck(e)
-    }),
-    warnForCritical()
+    })
   })
 }
 function battlefield() {
-  style('.top5_list{position:absolute;top:180px;padding:5px;border-radius:5px;width:200px;background:#242b27;box-shadow:0 0 10px black;color:white;cursor:default;z-index:9}.top5_list th{text-align:center;color:#91CC17;font-weight:bold}#left_top5{left:15px}#right_top5{right:15px}#campaign_top5{left:275px}#mu_missions{top:240px}.battle-mini-button-holder{z-index:200}.booster_activation{background:rgba(0,0,0,0.5);padding:0px;bottom:5px;left:5px}.weapon.selector{top:-10px}#change_weapon{z-index:1}#pvp_header h2{top:2px}.campaign_toggler{margin-top:8px}#pvp_header .battle_hero{top:106px}#pvp_battle_area .player{margin-top:140px}#pvp_battle_area .player.left_side{margin-left:15px}#pvp_battle_area .player.right_side{margin-right:15px}#pvp .campaign_details .entry em{opacity:1}#pvp .campaign_details .entry .pdomi_left em{right:5px}#join_pvp{z-index:21}'),
+  style('#switch_side{position:absolute;top:280px;left:344px;background:#83B70B;color:#FFF;cursor:pointer;padding:2px;border-radius:1px;font:bold 11px Arial}#switch_side:hover{background:#FB7E3D}.top5_list{position:absolute;top:180px;padding:5px;border-radius:5px;width:200px;background:#242b27;box-shadow:0 0 10px black;color:white;cursor:default;z-index:9}.top5_list th{text-align:center;color:#91CC17;font-weight:bold}#left_top5{left:15px}#right_top5{right:15px}#campaign_top5{left:275px}#mu_missions{top:240px}.battle-mini-button-holder{z-index:200}.booster_activation{background:rgba(0,0,0,0.5);padding:0px;bottom:5px;left:5px}.weapon.selector{top:-10px}#change_weapon{z-index:1}#pvp_header h2{top:2px}.campaign_toggler{margin-top:8px}#pvp_header .battle_hero{top:106px}#pvp_battle_area .player{margin-top:140px}#pvp_battle_area .player.left_side{margin-left:15px}#pvp_battle_area .player.right_side{margin-right:15px}#pvp .campaign_details .entry em{opacity:1}#pvp .campaign_details .entry .pdomi_left em{right:5px}#join_pvp{z-index:21}'),
   $('.country').css('top', '7px'),
   $('.resistance_badge').css('top', '120px'),
   $('.addon').css('cssText', 'background:rgba(0,0,0,0.5);padding:0px;top:30px;right:550px'),
@@ -561,8 +542,8 @@ function battlefield() {
   })
   var t = SERVER_DATA.zoneId,
   e = getDivision(),
-  a = img_country[$('.country.left_side a img').attr('src').split('/') [6].split('.') [0]],
-  i = img_country[$('.country.right_side a img').attr('src').split('/') [6].split('.') [0]],
+  i = img_country[$('.country.left_side a img').attr('src').split('/') [6].split('.') [0]],
+  a = img_country[$('.country.right_side a img').attr('src').split('/') [6].split('.') [0]],
   n = '<table><thead><tr><th width="80">Citizen</th><th width="30">Kills</th><th width="90">Influence</th></tr></thead><tbody></tbody></table></div>'
   setTimeout(function () {
     clearInterval(globalSleepInterval),
@@ -573,9 +554,9 @@ function battlefield() {
     $('.top5_list').remove(),
     $('#pvp_battle_area').append('<div id="left_top5" class="top5_list">' + n + '<div id="right_top5" class="top5_list">' + n + '<div id="campaign_top5" class="top5_list">' + n)
     try {
-      var o = currentStats[t][e][a],
-      r = currentStats[t][e][i],
-      s = overallStats[0][a],
+      var o = currentStats[t][e][i],
+      r = currentStats[t][e][a],
+      s = overallStats[0][i],
       l = '<tr><td style="white-space:nowrap;max-width:85px;overflow:hidden"><a href="/' + LANG + '/citizen/profile/',
       c = '</td><td style="text-align:right">'
       for (var p in o) o.hasOwnProperty(p) && $('#left_top5 tbody').append(l + o[p].citizen_id + '" target="_blank">' + fightersData[o[p].citizen_id].name + '</a>' + c + o[p].kills + c + comma(o[p].damage) + '</td></tr>')
@@ -584,15 +565,22 @@ function battlefield() {
     } catch (m) {
     }
     $('.campaign_toggler').html('<b style="color:#4397D3;margin-right:10px">' + $('#left_campaign_points strong').text() + '</b>Round ' + t + '<b style="color:#F95555;margin-left:10px">' + $('#right_campaign_points strong').text() + '</b>')
-  }, 1000)
+  }, 1000),
+  SERVER_DATA.isResistance && $('#pvp_battle_area').append('<div id="switch_side">SWITCH SIDE<div>'),
+  $('#switch_side').click(function () {
+    $.get('http://www.erepublik.com/en/military/battlefield-choose-side/' + SERVER_DATA.battleId + '/' + a),
+    setTimeout(function () {
+      location.reload()
+    }, 300)
+  })
 }
 function shootListener() {
-  $(document).ajaxSuccess(function (t, e, a) {
-    if (a.url.match(/military\/fight-shooot/) || a.url.match(/military\/deploy-bomb/)) {
-      var i = JSON.parse(e.responseText)
-      if (!i.error && ('ENEMY_KILLED' == i.message || 'OK' == i.message)) {
+  $(document).ajaxSuccess(function (t, e, i) {
+    if (i.url.match(/military\/fight-shooot/) || i.url.match(/military\/deploy-bomb/)) {
+      var a = JSON.parse(e.responseText)
+      if (!a.error && ('ENEMY_KILLED' == a.message || 'OK' == a.message)) {
         var n = 0
-        a.url.match(/military\/deploy-bomb/) ? n = i.bomb.damage : (n = i.user.givenDamage, eRS.stats[1] += i.user.earnedXp, i.oldEnemy.isNatural && (n += Math.floor(0.1 * n)), hitCalc(i.enemy), highlightWeapon()),
+        i.url.match(/military\/deploy-bomb/) ? n = a.bomb.damage : (n = a.user.givenDamage, eRS.stats[1] += a.user.earnedXp, a.oldEnemy.isNatural && (n += Math.floor(0.1 * n)), hitCalc(a.enemy), highlightWeapon()),
         eRS.stats[0]++,
         eRS.stats[2] += n,
         localStorage.setItem('eRS', JSON.stringify(eRS)),
@@ -616,7 +604,7 @@ function weaponMenu() {
   $('#change_weapon').remove(),
   $.getJSON('/' + LANG + '/military/show-weapons?_token=' + SERVER_DATA.csrfToken, function (e) {
     $('#pvp').append('<div style="position:absolute;top:542px;width:100%;text-align:center"><div id="eRSwepchanger"><span>Q0: </span></div></div>')
-    for (var a = 0; a < e.length; a++) e[a].weaponQuantity > 0 && $('#eRSwepchanger').append('<span>' + (10 == e[a].weaponId ? 'Bazooka' : 'Q' + e[a].weaponId + ': ') + '</span>')
+    for (var i = 0; i < e.length; i++) e[i].weaponQuantity > 0 && $('#eRSwepchanger').append('<span>' + (10 == e[i].weaponId ? 'Bazooka' : 'Q' + e[i].weaponId + ': ') + '</span>')
     hitCalc(t),
     highlightWeapon(),
     $('#eRSwepchanger span').click(function () {
@@ -640,17 +628,16 @@ function hitCalc(t) {
     $(this).text($(this).text().split(' ') [0] + ' ' + damageFormula($('#fighter_skill').text().replace(/,/g, ''), t.skill.replace(/,/g, ''), weapon[$(this).text().replace(/Q/g, 'q').split(':') [0]], t.damage, t.health))
   })
 }
-function damageFormula(t, e, a, i, n) {
-  var o = a ? (60 + (t - e) / 7.92) * (1 + (a - i) / 305) / 2 : (48 + (t - e) / 8.3) * (1 + (a - i) / 600) / 2
-  return $('.booster_timer').length && (o *= 1.5),
-  Math.ceil(n / o)
+function damageFormula(t, e, i, a, n) {
+  var o = i ? (60 + (t - e) / 7.92) * (1 + (i - a) / 305) / 2 : (48 + (t - e) / 8.3) * (1 + (i - a) / 600) / 2
+  return Math.ceil(n / ($('.booster_timer').length ? 1.5 * o : o))
 }
 function highlightWeapon() {
-  var t = $('#eRSwepchanger span')
-  t.eq(0).text().split(' ') [1] < t.eq(1).text().split(' ') [1] && t.eq(0).text('Q0: ' + t.eq(1).text().split(' ') [1])
+  var t = $('#eRSwepchanger span');
+  + t.eq(0).text().split(' ') [1] < t.eq(1).text().split(' ') [1] && t.eq(0).text('Q0: ' + t.eq(1).text().split(' ') [1])
   var e = [
   ]
-  $('#eRSwepchanger span:not(:last)').each(function () {
+  $('#eRSwepchanger span:not(:contains(Bazooka))').each(function () {
     e.push( + $(this).text().split(' ') [1])
   }),
   t.css('cssText', 'border-radius:3px;padding:1px;border:2px solid rgba(0,0,0,0.7);background:#83B70B').eq(e.indexOf(Math.min.apply(null, e))).css('border', '1px solid #FB7E3D'),
@@ -661,29 +648,29 @@ function customOffer() {
     var t = location.href.split('?') [1]
     if (!t) return
     var e = t.split('offerId=') [1].split('&') [0],
-    a = t.split('offerAmount=') [1].split('&') [0],
-    i = t.split('offerPrice=') [1]
+    i = t.split('offerAmount=') [1].split('&') [0],
+    a = t.split('offerPrice=') [1]
     $('#marketplace table tbody tr:not(:first),#marketplace .pager').remove(),
     $('.m_product').attr('id', 'productId_' + e),
     $('.m_provider a').attr('href', '/' + LANG + '/citizen/profile/' + t.split('sellerId=') [1].split('&') [0]).text(t.split('sellerName=') [1].split('&') [0]),
-    $('.m_stock:eq(1)').text(a),
-    $('.m_price strong:first').text(i.split('.') [0]),
-    $('.m_price sup').html('.' + i.split('.') [1] + ' ' + CC),
+    $('.m_stock:eq(1)').text(i),
+    $('.m_price strong:first').text(a.split('.') [0]),
+    $('.m_price sup').html('.' + a.split('.') [1] + ' ' + CC),
     $('.m_quantity input').attr({
       id: 'amount_' + e,
       maxlength: '6'
     }),
     $('.m_buy a').attr({
       id: e,
-      'data-max': a,
-      'data-price': i
+      'data-max': i,
+      'data-price': a
     })
   }
 }
 function influenceCalculator() {
   function t(t) {
-    $.get('/' + LANG + '/economy/market/' + CS + '/2/' + t, function (a) {
-      l[t] = a.split('data-price="') [2].split('"') [0] / (7 > t ? t : 10),
+    $.get('/' + LANG + '/economy/market/' + CS + '/2/' + t, function (i) {
+      l[t] = i.split('data-price="') [2].split('"') [0] / (7 > t ? t : 10),
       l.date = DATE,
       localStorage.setItem('eRS_wepprice', JSON.stringify(l)),
       e()
@@ -691,16 +678,16 @@ function influenceCalculator() {
   }
   function e() {
     for (var t = $('#InfCalc_hits').val(), e = 0; 8 > e; e++) {
-      var a = 10 * (1 + $('.citizen_military:eq(0) .stat small strong').text().split('/') [0].replace(',', '') / 400) * (1 + n / 5) * (1 + (7 > e ? 20 * e : 200) / 100)
-      $('#InfCalc_NE').is(':checked') && (a *= 1.1),
-      $('#InfCalc_BO').is(':checked') && (a *= 1.5),
-      $('#InfCalc_BO2').is(':checked') && (a *= 2),
-      $('.citizen_level:eq(0)').text() > 100 && (a *= 1.1),
-      $('#InfCalc_Q' + e + ' span').html('<br>Dmg: ' + comma(Math.round(t * a)) + '<br>Need: ' + comma(Math.ceil(r / a)) + '<br>Days: ' + comma(Math.ceil(r / a / t)) + '<br>Next TP: ' + comma(Math.ceil((s[1] - s[0]) / a)) + '<br>Cost: ' + comma(Math.ceil(100 * l[e] * 1000000 / a) / 100) + 'cc/M')
+      var i = 10 * (1 + $('.citizen_military:eq(0) .stat small strong').text().split('/') [0].replace(',', '') / 400) * (1 + n / 5) * (1 + (7 > e ? 20 * e : 200) / 100)
+      $('#InfCalc_NE').is(':checked') && (i *= 1.1),
+      $('#InfCalc_BO').is(':checked') && (i *= 1.5),
+      $('#InfCalc_BO2').is(':checked') && (i *= 2),
+      $('.citizen_level:eq(0)').text() > 100 && (i *= 1.1),
+      $('#InfCalc_Q' + e + ' span').html('<br>Dmg: ' + comma(Math.round(t * i)) + '<br>Need: ' + comma(Math.ceil(r / i)) + '<br>Days: ' + comma(Math.ceil(r / i / t)) + '<br>Next TP: ' + comma(Math.ceil((s[1] - s[0]) / i)) + '<br>Cost: ' + comma(Math.ceil(100 * l[e] * 1000000 / i) / 100) + 'cc/M')
     }
   }
   style('#eRS_InfCalc #InfCalc_hits{background:white;box-shadow:inset 0px 1px 1px #a6a6a6;border-color:#AEAEAE #C8C8C8 #E3E3E3;border-radius:3px;border-style:solid;border-width:1px;color:#333;padding:4px;text-align:center;width:35px;font-size:10px;margin:0 20px 0 5px}#eRS_InfCalc table td{width:25%}#eRS_InfCalc table td span{width:44px;font-size:11px;color:#666;margin-left:10px}#eRS_InfCalc table img{vertical-align:middle;width:40px;height:40px}#InfCalc_BO,#InfCalc_BO2,#InfCalc_NE{vertical-align:middle;margin-left:5px}')
-  for (var a = {
+  for (var i = {
     recruit: 1,
     'private': 2,
     corporal: 6,
@@ -719,11 +706,10 @@ function influenceCalculator() {
     legendary_force: 58,
     god_of_war: 62,
     titan: 66
-  }, i = $('.citizen_military:eq(1) h4 img').attr('src').split('/') [6].split('.') [0].split('_'), n = + i.pop() + a[i.join('_')], o = $('.citizen_military:eq(1) .stat small strong').text().replace(/,/g, '').split('/'), r = 10 * (o[1] - o[0]), s = $('.stat:eq(2) small:eq(1) strong').text().replace(/,/g, '').split('/'), l = JSON.parse(localStorage.getItem('eRS_wepprice')) || {
+  }, a = $('.citizen_military:eq(1) h4 img').attr('src').split('/') [6].split('.') [0].split('_'), n = + a.pop() + i[a.join('_')], o = $('.citizen_military:eq(1) .stat small strong').text().replace(/,/g, '').split('/'), r = 10 * (o[1] - o[0]), s = $('.stat:eq(2) small:eq(1) strong').text().replace(/,/g, '').split('/'), l = JSON.parse(localStorage.getItem('eRS_wepprice')) || {
     0: 0
   }, c = 1; 8 > c; c++) l[c] && l.date == DATE || t(c)
-  for (var p = '', d = 1; 8 > d; d++) p += '<td id="InfCalc_Q' + d + '"><img' + imgCache('icons/industry/2/q' + d + '.png') + '><span></span></td>',
-  3 == d && (p += '</tr><tr>')
+  for (var p = '', d = 1; 8 > d; d++) p += '<td id="InfCalc_Q' + d + '"><img' + imgCache('icons/industry/2/q' + d + '.png') + '><span></span></td>' + (3 == d ? '</tr><tr>' : '')
   $('.citizen_military:eq(1)').after('<h3>Influence Calculator</h3><div id="eRS_InfCalc" class="citizen_military"><div style="margin:0 15px;line-height:44px;color:#666;font-size:11px"><span>Hits <input type="text" id="InfCalc_hits" value="1"></span><span>Natural Enemy <input type="checkbox" id="InfCalc_NE"></span><span style="margin-left:15px">50% booster <input type="checkbox" id="InfCalc_BO"></span><span style="margin-left:15px">100% booster <input type="checkbox" id="InfCalc_BO2"></span></div><table style="width:100%;margin-left:15px"><tr><td id="InfCalc_Q0"><img' + imgCache('icons/industry/2/q1.png') + ' style="opacity:0.5"><span></span></td>' + p + '</tr></table></div>'),
   e(),
   $('#InfCalc_hits').keyup(function () {
@@ -737,20 +723,20 @@ function imgCache(t) {
   var e = JSON.parse(localStorage.getItem('eRS_imgCache')) || {
   }
   if (t in e && e[t].length > 100) return ' src="' + e[t] + '"'
-  var a = $.now() + '' + (10000000000 * Math.random()).toFixed(0)
-  $('body').append('<img id="eRS_cache' + a + '" style="display:none" src="/images/' + t + '">')
-  var i = document.getElementById('eRS_cache' + a),
+  var i = $.now() + '' + (10000000000 * Math.random()).toFixed(0)
+  $('body').append('<img id="eRS_cache' + i + '" style="display:none" src="/images/' + t + '">')
+  var a = document.getElementById('eRS_cache' + i),
   n = document.createElement('canvas'),
   o = n.getContext('2d')
-  return n.width = i.width,
-  n.height = i.height,
-  o.drawImage(i, 0, 0, i.width, i.height),
+  return n.width = a.width,
+  n.height = a.height,
+  o.drawImage(a, 0, 0, a.width, a.height),
   e[t] = n.toDataURL(),
   localStorage.setItem('eRS_imgCache', JSON.stringify(e)),
   ' src="/images/' + t + '"'
 }
 function getDivision() {
-  var t = $('.user_level b').text()
+  var t = erepublik.citizen.userLevel
   return t > 69 ? 4 : t > 49 ? 3 : t > 34 ? 2 : 1
 }
 function getPoints() {
@@ -758,23 +744,30 @@ function getPoints() {
   $('.bod_listing li,.country_battles li,.allies_battles li,.all_battles li').each(function () {
     var t = $(this),
     e = img_country[$('img.side_flags:eq(0)', t).attr('src').split('/') [6].split('.') [0]],
-    a = img_country[$('img.side_flags:eq(1)', t).attr('src').split('/') [6].split('.') [0]]
-    $.getJSON('/' + LANG + '/military/battle-stats/' + t.attr('id').split('-') [1], function (i) {
+    i = img_country[$('img.side_flags:eq(1)', t).attr('src').split('/') [6].split('.') [0]]
+    $.getJSON('/' + LANG + '/military/battle-stats/' + t.attr('id').split('-') [1], function (a) {
       function n(t) {
-        return t == m ? 'style="background:#C1E4F1;color:#000;border-radius:5px"' : void 0
+        return t == c ? 'style="background:#83B70B"' : void 0
       }
-      var o = i.stats.current[Object.getOwnPropertyNames(i.stats.current)],
+      var o = a.stats.current[Object.getOwnPropertyNames(a.stats.current)],
       r = 'domination',
       s = 'points',
-      l = i.division,
-      c = Math.round(l[r][1]),
-      p = Math.round(l[r][2]),
-      d = Math.round(l[r][3]),
-      g = Math.round(l[r][4]),
-      m = getDivision()
-      $('.tank_img', t).attr('title', '<table width="300px"><tr><td> Points </td><td> Dom </td><td> Wall </td><td> Div </td><td> Wall </td><td> Dom </td><td> Points </td></tr><tr ' + n(1) + '><td> ' + l[e][1][s] + ' </td><td>' + l[e][1][r] + '</td><td> ' + (100 - c) + '% </td><td>I</td><td> ' + c + '% </td><td>' + l[a][1][r] + '</td><td> ' + l[a][1][s] + ' </td></tr><tr ' + n(2) + '><td> ' + l[e][2][s] + '</td><td>' + l[e][2][r] + '</td><td> ' + (100 - p) + '% </td><td>II</td><td> ' + p + '% </td><td>' + l[a][2][r] + '</td><td> ' + l[a][2][s] + ' </td></tr><tr ' + n(3) + '><td> ' + l[e][3][s] + '</td><td>' + l[e][3][r] + '</td><td> ' + (100 - d) + '% </td><td>III</td><td> ' + d + '% </td><td>' + l[a][3][r] + '</td><td> ' + l[a][3][s] + ' </td></tr><tr ' + n(4) + '><td> ' + l[e][4][s] + '</td><td>' + l[e][4][r] + '</td><td> ' + (100 - g) + '% </td><td>IV</td><td> ' + g + '% </td><td>' + l[a][4][r] + '</td><td> ' + l[a][4][s] + ' </td></tr><tr><td colspan="3">D' + m + ' - BH damage:<br>' + comma(o[m][e][0].damage) + '</td><td></td><td colspan="3">D' + m + ' - BH damage:<br>' + comma(o[m][a][0].damage) + '</td></tr></table>').tipsy({
+      l = a.division,
+      c = getDivision(),
+      p = ((o[c] || {
+      }) [e] || []) [0] || {
+      },
+      d = ((o[c] || {
+      }) [i] || []) [0] || {
+      }
+      a.epicBattle && !$('.isEpicBattle', t).length && $('.countyTime', t).after('<img style="margin:11px -2px 0px" class="icons_battles isEpicBattle" src="http://www.erepublik.net/images/modules/misc/epic_battles_icon.png" title="This is an Epic Battle!">'),
+      $('.isEpicBattle', t).tipsy(),
+      $('.tank_img', t).attr('title', '<table width="300px"><tr><td> Points </td><td> Dom </td><td> Wall </td><td> Div </td><td> Wall </td><td> Dom </td><td> Points </td></tr><tr ' + n(1) + '><td> ' + l[e][1][s] + ' </td><td>' + l[e][1][r] + '</td><td> ' + (100 - l[r][1]).toFixed(2) + '% </td><td>I</td><td> ' + l[r][1].toFixed(2) + '% </td><td>' + l[i][1][r] + '</td><td> ' + l[i][1][s] + ' </td></tr><tr ' + n(2) + '><td> ' + l[e][2][s] + '</td><td>' + l[e][2][r] + '</td><td> ' + (100 - l[r][2]).toFixed(2) + '% </td><td>II</td><td> ' + l[r][2].toFixed(2) + '% </td><td>' + l[i][2][r] + '</td><td> ' + l[i][2][s] + ' </td></tr><tr ' + n(3) + '><td> ' + l[e][3][s] + '</td><td>' + l[e][3][r] + '</td><td> ' + (100 - l[r][3]).toFixed(2) + '% </td><td>III</td><td> ' + l[r][3].toFixed(2) + '% </td><td>' + l[i][3][r] + '</td><td> ' + l[i][3][s] + ' </td></tr><tr ' + n(4) + '><td> ' + l[e][4][s] + '</td><td>' + l[e][4][r] + '</td><td> ' + (100 - l[r][4]).toFixed(2) + '% </td><td>IV</td><td> ' + l[r][4].toFixed(2) + '% </td><td>' + l[i][4][r] + '</td><td> ' + l[i][4][s] + ' </td></tr><tr><td colspan="3">' + ((a.fightersData[p.citizen_id || ''] || {
+      }).name || '') + '<br>' + comma(p.damage || '') + '</td><td></td><td colspan="3">' + ((a.fightersData[d.citizen_id || ''] || {
+      }).name || '') + '<br>' + comma(d.damage || '') + '</td></tr></table>').tipsy({
         gravity: 's',
-        html: !0
+        html: !0,
+        opacity: 1
       })
     })
   })
@@ -784,27 +777,27 @@ function mercFF() {
   $('.isEpicBattle').css('margin', '11px -2px 0'),
   $.get('/' + LANG + '/citizen/profile/' + ID, function (t) {
     var e = t.replace(/src=/g, 'tmpsrc='),
-    a = ' style="cursor:default;border-radius:1px;float:right;padding:3px;background:#' + ($('.bod_listing').length ? 'FFDC5D;color:#8A560C' : 'E0EDD4;color:#5A8931') + ';font:bold 11px arial;margin:-10px;position:relative;top:14px;z-index:999;',
-    i = ' style="cursor:default;float:right;margin:14px 2px 10px 0;padding:3px;border-radius:5px;font:bold 11px arial;background:#'
+    i = ' style="cursor:default;border-radius:1px;float:right;padding:3px;background:#' + ($('.bod_listing').length ? 'FFDC5D;color:#8A560C' : 'E0EDD4;color:#5A8931') + ';font:bold 11px arial;margin:-10px;position:relative;top:14px;z-index:999;',
+    a = ' style="cursor:default;float:right;margin:14px 2px 10px 0;padding:3px;border-radius:5px;font:bold 11px arial;background:#'
     if (!eRS.ffKills) {
       var n = 25 * ($('.counter:eq(0)', e).text() % 3 + 1),
       o = $('#achievment > li:eq(0) span big:eq(0) strong', e).text()
-      $('#battle_listing').before('<span' + a + 'right:120px" title="' + (o.split('/') [1] - o.split('/') [0]) * n + ' kills needed">Freedom Fighter ' + o + ' (x' + n + ')</span>'),
+      $('#battle_listing').before('<span' + i + 'right:120px" title="' + (o.split('/') [1] - o.split('/') [0]) * n + ' kills needed">Freedom Fighter ' + o + ' (x' + n + ')</span>'),
       $('#freedom_fighter_region_list li a', e).each(function () {
         var t = $(this).parent().parent().find('em').text().split('/')
         $('.fight_button[href$="' + $(this).attr('href').split('show/') [1] + '"]').each(function () {
-          $(this).after('<div' + i + ($(this).parent().parent().hasClass('bod_listing') ? 'F5DF99;color:#8A560C' : 'E0EDD4;color:#5A8931') + '" title="Freedom Fighter medal kills"><span' + (t[0] < t[1] ? ' style="color:#FF6600"' : '') + '>' + t[0] + '</span> / ' + t[1] + '</div>')
+          $(this).after('<div' + a + ($(this).parent().parent().hasClass('bod_listing') ? 'F5DF99;color:#8A560C' : 'E0EDD4;color:#5A8931') + '" title="Freedom Fighter medal kills"><span' + (t[0] < t[1] ? ' style="color:#FF6600"' : '') + '>' + t[0] + '</span> / ' + t[1] + '</div>')
         })
       })
     }
     if (!eRS.mercenaryPoints) {
       var r = $('#achievment > li:eq(10) span big strong', e).text()
-      $('#battle_listing').before('<span' + a + 'right:20px" title="' + 25 * (50 - r.split('/') [0]) + ' kills needed">Mercenary ' + r + '</span>')
+      $('#battle_listing').before('<span' + i + 'right:20px" title="' + 25 * (50 - r.split('/') [0]) + ' kills needed">Mercenary ' + r + '</span>')
       var s = $('#achievment > li:eq(10) .country_list li', e)
       $('#battle_listing li').each(function () {
         var t = + $('img[tmpsrc$="/' + $('img.side_flags:eq(0)', this).attr('src').split('/').pop() + '"] ~ em', s).text().split('/') [0],
         e = + $('img[tmpsrc$="/' + $('img.side_flags:eq(1)', this).attr('src').split('/').pop() + '"] ~ em', s).text().split('/') [0]
-        $('a.fight_button', this).after('<div' + i + ($(this).parent().hasClass('bod_listing') ? 'F5DF99;color:#8A560C' : 'E0EDD4;color:#5A8931') + '" title="Mercenary medal kills for each side"><span style="color:#' + (t ? 25 > t ? 'FF6600' : '' : 'DD0000') + '">' + t + '</span> - <span style="color:#' + (e ? 25 > e ? 'FF6600' : '' : 'DD0000') + '">' + e + '</span></div>')
+        $('a.fight_button', this).after('<div' + a + ($(this).parent().hasClass('bod_listing') ? 'F5DF99;color:#8A560C' : 'E0EDD4;color:#5A8931') + '" title="Mercenary medal kills for each side"><span style="color:#' + (t ? 25 > t ? 'FF6600' : '' : 'DD0000') + '">' + t + '</span> - <span style="color:#' + (e ? 25 > e ? 'FF6600' : '' : 'DD0000') + '">' + e + '</span></div>')
       })
     }
     $('#content > span').tipsy({
@@ -820,9 +813,9 @@ function directRWLinks() {
     if ($('img.resistance_sign', this).length && !$(this).parent().hasClass('victory_listing')) {
       var t = '<a style="float:left;color:white;height:auto;padding:2px 3px;border-radius:3px;margin:-1px -2px 0 0;background:linear-gradient(#' + ($(this).parent().hasClass('bod_listing') ? 'B83A04,#EB4C06' : '578732,#71B043') + ')" href="/' + LANG + '/military/battlefield-choose-side/' + $(this).attr('id').split('-') [1] + '/',
       e = $('strong:eq(0) q', this).clone(),
-      a = $('strong:eq(1) q', this).clone()
+      i = $('strong:eq(1) q', this).clone()
       $('strong:eq(0)', this).html(t + img_country[$('img.side_flags:eq(0)', this).attr('src').split('/') [6].split('.') [0]] + '" class="RWQuickLink">' + $('img.side_flags:eq(0)', this).attr('alt') + '</a>').append(e),
-      $('strong:eq(1)', this).html(t + img_country[$('img.side_flags:eq(1)', this).attr('src').split('/') [6].split('.') [0]] + '" class="RWQuickLink">' + $('img.side_flags:eq(1)', this).attr('alt') + '</a>').append(a)
+      $('strong:eq(1)', this).html(t + img_country[$('img.side_flags:eq(1)', this).attr('src').split('/') [6].split('.') [0]] + '" class="RWQuickLink">' + $('img.side_flags:eq(1)', this).attr('alt') + '</a>').append(i)
     }
   })
 }
@@ -830,9 +823,9 @@ function autofillMarket() {
   var t = $('.currency_amount ~ div span').length ? $('.currency_amount ~ div span').text().split(' ') [1].replace(/,/g, '')  : 9e+99
   $('a.buyOffer').each(function () {
     var e = $(this).attr('data-price'),
-    a = Math.min(Math.floor((erepublik.citizen.currencyAmount - 1) / e), $(this).attr('data-max'), t)
-    $(this).parent().parent().find('input').val(a),
-    $('span', this).text($(this).attr('data-i18n') + ' ' + comma(Math.ceil(a * e * 100) / 100) + ' ' + CC)
+    i = Math.min(Math.floor((erepublik.citizen.currencyAmount - 1) / e), $(this).attr('data-max'), t)
+    $(this).parent().parent().find('input').val(i),
+    $('span', this).text($(this).attr('data-i18n') + ' ' + comma(Math.ceil(i * e * 100) / 100) + ' ' + CC)
   })
 }
 function improveProfile() {
@@ -853,7 +846,7 @@ function improveProfile() {
   $('#career_tab_content').prev().append(' (' + e + ')')
 }
 function oldBattlePage() {
-  $('.fight_button').each(function () {
+  $('.fight_button,#orderContainer a').each(function () {
     $(this).attr('href', $(this).attr('href').replace('-new', ''))
   }),
   $('.RWQuickLink,.join,.reversed').click(function (t) {
@@ -861,7 +854,7 @@ function oldBattlePage() {
     var e = $(this).attr('href')
     $.get(e),
     setTimeout(function () {
-      location.href = e.replace('-choose-side', '')
+      location.href = e.substring(0, e.lastIndexOf('/')).replace('-choose-side', '')
     }, 300)
   })
 }
@@ -995,7 +988,7 @@ location.href.match(/economy\/inventory/) || eRS.showStorageInv && eRS.storageCa
 eRS.showStats || showStats(),
 eRS.maxEnergy || maxEnergy(),
 location.href.match(/military\/campaigns/) && ($('.combat_missions,.noborder').remove(), eRS.directRWLinks || directRWLinks(), eRS.naturalEnemy || naturalEnemy(), eRS.mercenaryPoints && eRS.ffKills || mercFF(), eRS.getPoints || getPoints()),
-!location.href.match(/military\/campaigns/) && !location.href.match(/wars\/show/) || eRS.oldBattlePage || oldBattlePage(),
+eRS.oldBattlePage || oldBattlePage(),
 location.href.match(/citizen\/profile/) && (eRS.improveProfile || improveProfile(), eRS.influenceCalculator || influenceCalculator(), eRS.removeDecorations || $('#career_tab_content ~ :lt(2)').remove()),
 location.href.match(/economy\/market/) && (customOffer(), eRS.costPerUse || costPerUse(), eRS.autofillMarket || autofillMarket()),
 location.href.match(/economy\/exchange-market/) && !eRS.autofillGold && autofillGold(),
