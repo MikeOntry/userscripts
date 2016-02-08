@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           eRepublik - Donate Autofill v2
-// @match          http://www.erepublik.com/*/economy/donate-*/*
-// @version        2.1
+// @match          *//www.erepublik.com/*/economy/donate-*/*
+// @version        2.2
 // @grant          none
 // ==/UserScript==
 
